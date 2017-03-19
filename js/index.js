@@ -9,7 +9,7 @@ var stars;
 var score = 0;
 var scoreText;
 
-var gravity = 300;
+var gravity = 400;
 
 var fondoJuego;
 var jumped = false;
@@ -17,6 +17,10 @@ var doubleJumped = false;
 var cont = 0;
 var lastSide;
 var punch;
+var isPunching = false;
+var isRunning = false;
+var isJumping = false;
+
 var estadoPrincipal = {
 
     preload : function() {
@@ -78,7 +82,7 @@ var estadoPrincipal = {
 
         // The player and its settings
         player = game.add.sprite(32, game.world.height - 300 , 'dude');
-        player.scale.setTo(0.5,0.5);
+        player.scale.setTo(0.4, 0.5);
         //  We need to enable physics on the player
         game.physics.arcade.enable(player);
 
@@ -114,6 +118,7 @@ var estadoPrincipal = {
 
             //  This just gives each star a slightly random bounce value
             star.body.bounce.y = 0.7 + Math.random() * 0.2;
+            star.body.bounce.x = 0.5 + Math.random() * 0.2;
         }
 
         //  The score
@@ -139,39 +144,48 @@ var estadoPrincipal = {
         player.body.velocity.x = 0;
         fondoJuego.tilePosition.x +=1;
 
-        
-
         if (cursors.left.isDown){   
+            isRunning = true;
             player.body.velocity.x = -150;
             lastSide = 'left';
             if(player.body.touching.down){
+                isJumping = false;
                 player.animations.play('walk-left');
             }else{
+                isJumping = true;
                 player.animations.play('jump-left');
             }
         }
         else if (cursors.right.isDown){
+            isRunning = true;
             player.body.velocity.x = 150;
             lastSide = 'right';
             if(player.body.touching.down){
+                isJumping = false;
                 player.animations.play('walk-right');
             }else{
+                isJumping = true;
                 player.animations.play('jump-right');
             }
         }
         else{
+            isRunning = false;
             if(player.body.touching.down){
+                isJumping = false;
                 if(punch.isDown){
+                    isPunching = true;
                     if(lastSide == 'left'){ 
                         player.animations.play('punch-left');
                     }else { 
                         player.animations.play('punch-right');
                     }
                 }else{
-                    if(lastSide == 'left'){  
-                        player.frame = 6;
-                    }else { 
-                        player.frame = 0;
+                    if(isPunching == false){ 
+                        if(lastSide == 'left'){  
+                            player.frame = 6;
+                        }else { 
+                            player.frame = 0;
+                        }
                     }
                 }
             }else{
@@ -181,6 +195,11 @@ var estadoPrincipal = {
                     player.animations.play('jump-right');
                 }
             }
+        }
+        console.log(player.animations.currentAnim.frame);
+
+        if(player.animations.currentAnim.frame == 20 || player.animations.currentAnim.frame == 16 || isRunning || isJumping){
+            isPunching = false;
         }
 
         if(player.body.touching.down){
@@ -203,7 +222,7 @@ var estadoPrincipal = {
         }else{
             if(jump){
                 if(doubleJumped == false && cursors.up.isDown){
-                    player.body.velocity.y = -400;
+                    player.body.velocity.y = -200;
                     doubleJumped = true;
                 }
             }
