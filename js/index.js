@@ -5,6 +5,9 @@ var player;
 var platforms;
 var cursors;
 
+var buttonPause;
+var buttonContinue;
+
 var stars;
 var score = 0;
 var scoreText;
@@ -21,12 +24,14 @@ var isPunching = false;
 var isRunning = false;
 var isJumping = false;
 
-var juego = {
+var Juego = {
 
     preload : function() {
         game.load.image('sky', 'assets/sky.png');
         game.load.image('ground', 'assets/piso0.png');
         game.load.image('star', 'assets/star.png');
+        game.load.image('pause_button', 'assets/la_leyenda/menu/pause_button.png');
+        game.load.image('continue_button', 'assets/la_leyenda/menu/continue_button.png');
         //game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
         //game.load.spritesheet('dude', ['assets/main/main1.png'], 84, 99);
         //game.load.atlas('dude', 'assets/main/main0.png', null, null);
@@ -36,7 +41,6 @@ var juego = {
 
     create: function() {
 
-
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.world.setBounds(0, 0, 5000, 500);
 
@@ -44,7 +48,6 @@ var juego = {
         fondoJuego.scale.setTo(4,4);
 
         platforms = game.add.group();
-
         platforms.enableBody = true;
 
         var ground = platforms.create(0, game.world.height - 64, 'ground');
@@ -74,7 +77,7 @@ var juego = {
         ledge.body.immovable = true;
         ledge.scale.setTo(0.4, 0.5);
 
-        player = game.add.sprite(32, game.world.height - 300 , 'dude');
+        player = game.add.sprite(32, game.height - 200, 'dude');
         player.scale.setTo(0.4, 0.5);
 
         game.physics.arcade.enable(player);
@@ -107,11 +110,19 @@ var juego = {
         scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
         cursors = game.input.keyboard.createCursorKeys();
         punch = game.input.keyboard.addKey(Phaser.Keyboard.C);
+
+        buttonPause = game.add.button(game.width-100, 10 , 'pause_button' , Juego.pause , this);
+        buttonPause.scale.setTo(0.5, 0.5);
+        buttonPause.fixedToCamera = true;
+
+
+        buttonContinue = game.add.button(game.width/2, game.height/2 , 'continue_button' , null , this);
+        buttonContinue.anchor.setTo(0.5);
+        buttonContinue.fixedToCamera = true;
+        buttonContinue.visible = false;
     },
 
     update: function() {
-
-        
         game.camera.follow(player);
         game.physics.arcade.collide(player, platforms);
         game.physics.arcade.collide(stars, platforms);
@@ -173,7 +184,6 @@ var juego = {
                 }
             }
         }
-        console.log(player.animations.currentAnim.frame);
 
         if(player.animations.currentAnim.frame == 20 || player.animations.currentAnim.frame == 16 || isRunning || isJumping){
             isPunching = false;
@@ -183,8 +193,6 @@ var juego = {
 
             jump = false;
             doubleJumped = false;
-
-            
         }else{
             jump = true;
         }
@@ -202,12 +210,23 @@ var juego = {
                 }
             }
         }
+    },
+
+    pause : function(){
+        buttonContinue.visible = true;
+        game.input.onDown.add(unpause, self);
+        game.paused = true;
     }
 }
 
+function unpause(event){
+    console.log(event);
+    buttonContinue.visible = false;
+    game.paused = false;
+}
+
 function collectStar (player, star) {
-    
-    star.kill();
+    star.destroy();
     score += 10;
     scoreText.text = 'Score: ' + score;
 
