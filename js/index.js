@@ -5,8 +5,13 @@ var player;
 var platforms;
 var cursors;
 
+
+var continue_button;
 var buttonPause;
-var buttonContinue;
+var retry_button;
+var exit_button;
+
+var pause_p;
 
 var stars;
 var score = 0;
@@ -27,11 +32,15 @@ var isJumping = false;
 var Juego = {
 
     preload : function() {
-        game.load.image('sky', 'assets/sky.png');
+        game.load.image('sky', 'assets/la_leyenda/nivel1/fondo_3.png');
         game.load.image('ground', 'assets/piso0.png');
         game.load.image('star', 'assets/star.png');
         game.load.image('pause_button', 'assets/la_leyenda/menu/pause_button.png');
+
         game.load.image('continue_button', 'assets/la_leyenda/menu/continue_button.png');
+        game.load.image('exit_button', 'assets/la_leyenda/menu/exit_button.png');
+        game.load.image('retry_button', 'assets/la_leyenda/menu/retry_button.png');
+
         //game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
         //game.load.spritesheet('dude', ['assets/main/main1.png'], 84, 99);
         //game.load.atlas('dude', 'assets/main/main0.png', null, null);
@@ -45,7 +54,8 @@ var Juego = {
         game.world.setBounds(0, 0, 5000, 500);
 
         fondoJuego = game.add.tileSprite(0, 0, game.world.width, game.world.height, 'sky');
-        fondoJuego.scale.setTo(4,4);
+        fondoJuego.fixedToCamera = true;
+        //fondoJuego.scale.setTo(1.5,1.3);
 
         platforms = game.add.group();
         platforms.enableBody = true;
@@ -115,14 +125,40 @@ var Juego = {
         buttonPause.scale.setTo(0.5, 0.5);
         buttonPause.fixedToCamera = true;
 
+        pause_p = game.input.keyboard.addKey(Phaser.Keyboard.P);
+        
+        game.input.keyboard.onUpCallback = function (e) {
+            if(e.keyCode == Phaser.Keyboard.P || e.keyCode == Phaser.Keyboard.ESC){
+                if(!game.paused){
+                    Juego.pause();
+                }else{
+                    unpause();
+                }
+            }
+        };
 
-        buttonContinue = game.add.button(game.width/2, game.height/2 , 'continue_button' , null , this);
-        buttonContinue.anchor.setTo(0.5);
-        buttonContinue.fixedToCamera = true;
-        buttonContinue.visible = false;
+        continue_button = game.add.button(game.width/2, game.height/2 - game.height/7, 'continue_button' , null , this);
+        continue_button.anchor.setTo(0.5);
+        continue_button.fixedToCamera = true;
+        continue_button.visible = false;
+
+        retry_button = game.add.button(game.width/2 + game.width/10 , game.height/2 + game.height/20, 'retry_button' , null , this);
+        retry_button.anchor.setTo(0.5);
+        retry_button.scale.setTo(0.7, 0.7);
+        retry_button.fixedToCamera = true;
+        retry_button.visible = false;
+
+        exit_button = game.add.button(game.width/2 - game.width/10, game.height/2 + game.height/20  , 'exit_button' , null , this);
+        exit_button.anchor.setTo(0.5);
+        exit_button.scale.setTo(0.7, 0.7);
+        exit_button.fixedToCamera = true;
+        exit_button.visible = false;
+
+        retry_button.events.onInputDown.add(listener, this);
     },
 
     update: function() {
+        fondoJuego.tilePosition.x -= 0.05;
         game.camera.follow(player);
         game.physics.arcade.collide(player, platforms);
         game.physics.arcade.collide(stars, platforms);
@@ -130,7 +166,6 @@ var Juego = {
         game.physics.arcade.overlap(player, stars, collectStar, null, this);
 
         player.body.velocity.x = 0;
-        fondoJuego.tilePosition.x +=1;
 
         if (cursors.left.isDown){   
             isRunning = true;
@@ -213,15 +248,34 @@ var Juego = {
     },
 
     pause : function(){
-        buttonContinue.visible = true;
-        game.input.onDown.add(unpause, self);
+        game.input.onDown.add(paused_buttons, self);
+        continue_button.visible = true;
+        retry_button.visible = true;
+        exit_button.visible = true;
         game.paused = true;
     }
 }
 
-function unpause(event){
-    console.log(event);
-    buttonContinue.visible = false;
+function paused_buttons(event){
+    if(clicked(event, continue_button)){
+        unpause();
+    }
+}
+
+function clicked(event, button){
+    var x1 = button.cameraOffset.x - button.width/2;
+    var x2 = button.cameraOffset.x + button.width/2;
+    var y1 = button.cameraOffset.y - button.height/2;
+    var y2 = button.cameraOffset.y + button.height/2;
+    
+    console.log(event.x > x1 && event.x < x2 && event.y > y1 && event.y < y2);
+    return (event.x > x1 && event.x < x2 && event.y > y1 && event.y < y2 );
+}
+
+function unpause(){
+    continue_button.visible = false;
+    retry_button.visible = false;
+    exit_button.visible = false;
     game.paused = false;
 }
 
@@ -230,4 +284,8 @@ function collectStar (player, star) {
     score += 10;
     scoreText.text = 'Score: ' + score;
 
+}
+
+function listener () {
+    console.log("message");
 }
