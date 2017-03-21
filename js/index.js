@@ -4,7 +4,7 @@
 var player;
 var platforms;
 var cursors;
-
+var ground;
 
 var continue_button;
 var buttonPause;
@@ -33,7 +33,7 @@ var Juego = {
 
     preload : function() {
         game.load.image('sky', 'assets/la_leyenda/nivel1/fondo_3.png');
-        game.load.image('ground', 'assets/piso0.png');
+        game.load.image('ground', 'assets/la_leyenda/nivel1/piso3.png');
         game.load.image('star', 'assets/star.png');
         game.load.image('pause_button', 'assets/la_leyenda/menu/pause_button.png');
 
@@ -60,35 +60,25 @@ var Juego = {
         platforms = game.add.group();
         platforms.enableBody = true;
 
-        var ground = platforms.create(0, game.world.height - 64, 'ground');
+        for(let i=0;i<=4;i++){
+            ground = platforms.create(i*640, game.world.height - 100, 'ground');
+            ground.scale.setTo(1, 1);
+            ground.body.immovable = true;
+            ground.body.setSize(ground.width, ground.height, 0, 30);
+        }
 
-        ground.scale.setTo(2, 2);
-
+        ground.scale.setTo(1, 1);
         ground.body.immovable = true;
 
-
-        var ground = platforms.create(500, game.world.height - 100, 'ground');
-
-
-        ground.scale.setTo(1, 0.5);
-
-        ground.body.immovable = true;
-
-        var ledge = platforms.create(300, 500, 'ground');
+        /*var ledge = platforms.create(300, 500, 'ground');
         ledge.body.immovable = true;
 
-        ledge = platforms.create(-150, 250, 'ground');
-
-
-        ledge.body.immovable = true;
-
-
-        var ledge = platforms.create(100, 200, 'ground');
-        ledge.body.immovable = true;
-        ledge.scale.setTo(0.4, 0.5);
+        //ledge = platforms.create(-150, 250, 'ground');
+        ledge.body.immovable = true;*/
 
         player = game.add.sprite(32, game.height - 200, 'dude');
-        player.scale.setTo(0.4, 0.5);
+        player.anchor.setTo(0.5);
+        player.scale.setTo(0.9, 0.9);
 
         game.physics.arcade.enable(player);
 
@@ -108,8 +98,7 @@ var Juego = {
 
         stars.enableBody = true;
 
-        for (var i = 0; i < 12; i++)
-        {
+        for (var i = 0; i < 12; i++){
             var star = stars.create(i * 70, 0, 'star');
 
             star.body.gravity.y = gravity;
@@ -155,21 +144,20 @@ var Juego = {
         exit_button.visible = false;
 
         retry_button.events.onInputDown.add(listener, this);
-    },
+    }n,
 
     update: function() {
-        fondoJuego.tilePosition.x -= 0.05;
+        fondoJuego.tilePosition.x -= 0.1;
         game.camera.follow(player);
         game.physics.arcade.collide(player, platforms);
         game.physics.arcade.collide(stars, platforms);
-
         game.physics.arcade.overlap(player, stars, collectStar, null, this);
 
         player.body.velocity.x = 0;
 
         if (cursors.left.isDown){   
             isRunning = true;
-            player.body.velocity.x = -150;
+            player.body.velocity.x = -200;
             lastSide = 'left';
             if(player.body.touching.down){
                 isJumping = false;
@@ -181,7 +169,7 @@ var Juego = {
         }
         else if (cursors.right.isDown){
             isRunning = true;
-            player.body.velocity.x = 150;
+            player.body.velocity.x = 200;
             lastSide = 'right';
             if(player.body.touching.down){
                 isJumping = false;
@@ -219,13 +207,14 @@ var Juego = {
                 }
             }
         }
-
-        if(player.animations.currentAnim.frame == 20 || player.animations.currentAnim.frame == 16 || isRunning || isJumping){
+        console.log(isPunching);
+        console.log(player.animations.currentAnim.frame);
+        if(player.animations.currentAnim.frame == 20 || player.animations.currentAnim.frame == 16){
             isPunching = false;
+            player.animations.stop(null, true);
         }
 
         if(player.body.touching.down){
-
             jump = false;
             doubleJumped = false;
         }else{
@@ -235,16 +224,21 @@ var Juego = {
         if (cursors.up.isDown && player.body.touching.down && jump == false)
         {   
             jump = true;
-            player.body.velocity.y = -300;
+            player.body.velocity.y = -400;
             cursors.up.isDown = false;
         }else{
             if(jump){
                 if(doubleJumped == false && cursors.up.isDown){
-                    player.body.velocity.y = -200;
+                    player.body.velocity.y = -300;
                     doubleJumped = true;
                 }
             }
         }
+    },
+
+    render: function(){
+        game.debug.body(player);
+        game.debug.body(ground);
     },
 
     pause : function(){
@@ -257,8 +251,16 @@ var Juego = {
 }
 
 function paused_buttons(event){
-    if(clicked(event, continue_button)){
-        unpause();
+    if(game.paused){
+        if(clicked(event, continue_button)){
+            unpause();
+        }else if(clicked(event, retry_button)){
+            game.state.start('Game');
+            unpause();
+        }else if(clicked(event, exit_button)){
+            game.state.start('Menu');
+            unpause();
+        }   
     }
 }
 
@@ -267,8 +269,6 @@ function clicked(event, button){
     var x2 = button.cameraOffset.x + button.width/2;
     var y1 = button.cameraOffset.y - button.height/2;
     var y2 = button.cameraOffset.y + button.height/2;
-    
-    console.log(event.x > x1 && event.x < x2 && event.y > y1 && event.y < y2);
     return (event.x > x1 && event.x < x2 && event.y > y1 && event.y < y2 );
 }
 
@@ -283,7 +283,6 @@ function collectStar (player, star) {
     star.destroy();
     score += 10;
     scoreText.text = 'Score: ' + score;
-
 }
 
 function listener () {
