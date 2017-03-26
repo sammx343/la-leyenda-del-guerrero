@@ -2,17 +2,23 @@ var Menu = {
 
   preload : function(){
     game.stage.backgroundColor = "#FCF5D6";
-    game.load.image('titulo', 'assets/la_leyenda/menu/titulo.png');
-    game.load.image('jugarButton', 'assets/la_leyenda/menu/jugar_button.png');
+    game.load.image('titulo', 'assets/la_leyenda/menu/identificador.png');
+    game.load.image('fondo', 'assets/la_leyenda/menu/fondo.png');
+    game.load.atlasJSONHash('jugarButton', 'assets/la_leyenda/menu/botones-jugar.png', 'js/atlas/menu_button.json');
   },
 
   create : function(){
-    var titulo = game.add.sprite(0, 0, 'titulo', this);
-    titulo.scale.setTo(0.9, 0.8);
+    var fondo = game.add.tileSprite(0, 0, 1480, 920, 'fondo');
+    fondo.fixedToCamera = true;
+    fondo.scale.setTo(0.7,0.7);
 
-    var jugarButton = game.add.button(game.width/2, game.height/2+50, 'jugarButton', Menu.iniciarJuego, Menu , 'titulo', 'titulo', 'titulo', 'titulo' )
+    var titulo = game.add.sprite(game.width/2, game.height/3 , 'titulo', this);
+    titulo.scale.setTo(0.8, 0.8);
+    titulo.anchor.setTo(0.5);
+
+    var jugarButton = game.add.button(game.width/2, game.height/2+100, 'jugarButton', Menu.iniciarJuego, Menu , 0, 1, 1);
     jugarButton.anchor.setTo(0.5);
-    jugarButton.scale.setTo(0.3, 0.3);
+    jugarButton.scale.setTo(0.7, 0.7);
   },
 
   iniciarJuego : function(){
