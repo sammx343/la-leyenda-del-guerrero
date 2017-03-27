@@ -65,7 +65,7 @@ var Juego = {
 
     create: function() {
 
-        var tam = 40;
+        var tam = 10;
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.world.setBounds(0, 0, 10000, 500);
