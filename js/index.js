@@ -144,7 +144,7 @@ var Juego = {
         exit_button.visible = false;
 
         retry_button.events.onInputDown.add(listener, this);
-    }n,
+    },
 
     update: function() {
         fondoJuego.tilePosition.x -= 0.1;
@@ -162,6 +162,14 @@ var Juego = {
             if(player.body.touching.down){
                 isJumping = false;
                 player.animations.play('walk-left');
+                if(punch.isDown){
+                    isPunching = true;
+                if(lastSide == 'left'){ 
+                    player.animations.play('punch-left');
+                }else { 
+                    player.animations.play('punch-right');
+                }
+            }
             }else{
                 isJumping = true;
                 player.animations.play('jump-left');
@@ -174,6 +182,13 @@ var Juego = {
             if(player.body.touching.down){
                 isJumping = false;
                 player.animations.play('walk-right');
+                if(punch.isDown){
+                    isPunching = true;
+                if(lastSide == 'left'){ 
+                    player.animations.play('punch-left');
+                }else { 
+                    player.animations.play('punch-right');
+                }
             }else{
                 isJumping = true;
                 player.animations.play('jump-right');
@@ -207,6 +222,7 @@ var Juego = {
                 }
             }
         }
+
         console.log(isPunching);
         console.log(player.animations.currentAnim.frame);
         if(player.animations.currentAnim.frame == 20 || player.animations.currentAnim.frame == 16){
