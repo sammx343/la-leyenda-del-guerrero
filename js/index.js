@@ -2,6 +2,7 @@
 
 
 var player;
+var pajaro;
 var platforms;
 var fondoLight;
 var cursors;
@@ -60,6 +61,7 @@ var Juego = {
         //game.load.spritesheet('dude', ['assets/main/main1.png'], 84, 99);
         //game.load.atlas('dude', 'assets/main/main0.png', null, null);
         game.load.atlasJSONHash('dude', 'assets/main/main.png', 'js/atlas/main.json');
+        game.load.spritesheet('pajaro', 'assets/la_leyenda/enemigos/pajaro_spritesheet.png', 255, 229);
         //game.load.atlasJSONHash('buttons', 'assets/la_leyenda/menu/options_stylesheet.png', 'js/atlas/game_options_atlas.json');
     },
 
@@ -107,8 +109,6 @@ var Juego = {
 
         
         for(let i=0;i<=6;i++){
-            
-
             if(i%3==0){
                 ground = platforms.create(i*1280, game.world.height - 350  - tam , 'capa21');
                 ground.body.immovable = true;
@@ -133,9 +133,14 @@ var Juego = {
         //ledge = platforms.create(-150, 250, 'ground');
         ledge.body.immovable = true;*/
 
-        player = game.add.sprite(32, game.height - 400, 'dude');
+        player = game.add.sprite(0, game.height - 200, 'dude');
         player.anchor.setTo(0.5);
         player.scale.setTo(0.9, 0.9);
+
+        pajaro = game.add.sprite(1000, game.height - 500, 'pajaro');
+        pajaro.scale.setTo(0.8, 0.8);
+        pajaro.anchor.setTo(0.5);
+        
 
         for(let i=0;i<=6;i++){
             if(i%2==0){
@@ -146,6 +151,8 @@ var Juego = {
         }
 
         game.physics.arcade.enable(player);
+        game.physics.arcade.enable(pajaro);
+        pajaro.body.setSize(pajaro.width-pajaro.width/10, pajaro.height-pajaro.height/10, 0, 0);
 
         player.body.gravity.y = gravity;
         player.body.collideWorldBounds = true;
@@ -158,6 +165,9 @@ var Juego = {
         player.animations.add('jump-right', [21], 6 , true);
         player.animations.add('jump-left', [22], 6 , true);
         player.animations.add('dead', [23], 6 , true);
+
+        pajaro.animations.add('fly_right', [ 0 , 0 , 0 ,1, 1, 2, 2, 3, 3, 3, 2 , 2, 1, 1], 25, true);
+        pajaro.animations.add('fly_left', [ 4, 4, 4, 5, 5, 6, 6, 7, 7, 7 , 6 , 6 , 5 , 5], 25, true);
 
         stars = game.add.group();
 
@@ -224,7 +234,7 @@ var Juego = {
         game.physics.arcade.collide(player, platforms);
         game.physics.arcade.collide(stars, platforms);
         game.physics.arcade.overlap(player, stars, collectStar, null, this);
-
+        game.physics.arcade.overlap(player, pajaro, touchingEnemy, null, this);
         //console.log(game.camera.atLimit);
 
         player.body.velocity.x = 0;
@@ -344,11 +354,16 @@ var Juego = {
                 console.log("message");
             }
         };
+
+        
+        movePajaro();
     },
 
     render: function(){
-       /* game.debug.body(player);
+       /* 
         platforms.forEachAlive(renderGroup, this);*/
+        game.debug.body(pajaro);
+        game.debug.body(player);
     },
 
     pause : function(){
@@ -360,6 +375,20 @@ var Juego = {
         exit_button.visible = true;
         game.paused = true;
     }
+}
+
+function movePajaro(){
+    if(pajaro.x >= player.x+100){
+        pajaro.animations.play('fly_right');
+        pajaro.body.velocity.x = -100;
+    }else if(pajaro.x < player.x-100){
+        pajaro.animations.play('fly_left');
+        pajaro.body.velocity.x = 100;
+    }
+}
+
+function touchingEnemy(player, enemy){
+    console.log(enemy.key);
 }
 
 function renderGroup(member) {
