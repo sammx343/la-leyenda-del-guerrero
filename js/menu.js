@@ -20,7 +20,7 @@ var Menu = {
     titulo.scale.setTo(0.8, 0.8);
     titulo.anchor.setTo(0.5);
 
-    jugarButton = game.add.button(game.width/2, game.height/2+100, 'jugarButton', Menu.iniciarJuego, Menu , 0, 1, 1);
+    jugarButton = game.add.button(game.width/2, game.height/2+100, 'jugarButton', Menu.iniciarJuego, Menu , 1,0,0,1);
     jugarButton.anchor.setTo(0.5);
     jugarButton.scale.setTo(0.7, 0.7);
   },

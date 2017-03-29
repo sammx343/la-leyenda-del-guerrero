@@ -17,11 +17,11 @@ var Mapa = {
 
     jugar_buttons = game.add.button(game.width-150, game.height-100, 'jugar_buttons', null, Mapa);
     jugar_buttons.anchor.setTo(0.5,0.5);
-    jugar_buttons.onInputDown.add(frame);
+    jugar_buttons.onInputDown.add(frame, this, 0);
     jugar_buttons.onInputUp.add(play);
 
     nivel_1 = game.add.button(game.width/2-100, game.height/2, 'nivel_1', null, Mapa);
-    nivel_1.events.onInputUp.add(addSelector);
+    nivel_1.events.onInputUp.add(addSelector, {a: "wdawd"});
     nivel_1.scale.setTo(0.7,0.7);
     nivel_1.anchor.setTo(0.5,0.5);
 
@@ -53,9 +53,11 @@ function addSelector(){
 
 function play(){
   if(selector.visible){
-    Mapa.state.start('Game');
+    //Mapa.state.start('Game');
+    Mapa.state.start('Transition');
   }
 }
+
 function frame(){
   jugar_buttons.frame = 0;
 }

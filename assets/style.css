@@ -1,0 +1,8 @@
+body{
+  background: #EDEAC9;
+  text-align: center;
+}
+
+#bloque_juego{
+  display: inline-block;
+}

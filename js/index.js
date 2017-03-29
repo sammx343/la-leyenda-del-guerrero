@@ -358,8 +358,8 @@ var Juego = {
     render: function(){
        /* 
         platforms.forEachAlive(renderGroup, this);*/
-        game.debug.body(pajaro);
-        game.debug.body(player);
+        //game.debug.body(pajaro);
+        //game.debug.body(player);
     },
 
     pause : function(){
@@ -374,13 +374,6 @@ var Juego = {
 }
 
 function movePajaro(){
-    /*if(pajaro.x >= player.x+100){
-        pajaro.animations.play('fly_right');
-        pajaro.body.velocity.x = -100;
-    }else if(pajaro.x < player.x-100){
-        pajaro.animations.play('fly_left');
-        pajaro.body.velocity.x = 100;
-    }*/
     console.log(pajaro.x + " " + pajaro.y);
     if(pajaro.y <= 100){
         pajaro.body.velocity.y = +50;
