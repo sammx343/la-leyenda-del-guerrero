@@ -1,4 +1,4 @@
-//var var player;
+var player;
 var pajaro;
 var platforms;
 var fondoLight;
@@ -63,17 +63,17 @@ var Juego = {
     },
 
     create: function() {
-
-        var tam = 10;
-
+        var tam = -100;
+        lastSide = 'right';
         game.physics.startSystem(Phaser.Physics.ARCADE);
+        game.camera.flash('#000000', 2000, true);
         game.world.setBounds(0, 0, 10000, 500);
 
-        fondoJuego = game.add.tileSprite(0, 0, game.world.width, game.world.height, 'sky');
+        fondoJuego = game.add.tileSprite(0, -10, game.world.width, game.world.height, 'sky');
         fondoJuego.fixedToCamera = true;
 
         fondoLight = game.add.group();
-        fondo1 = game.add.tileSprite(1280*0, -tam - 10, 1400, 1010, 'capa32');
+        fondo1 = game.add.tileSprite(1280*0, 0, 1400, 1010, 'capa32');
         //fondo2 = game.add.tileSprite(1280*1, 8, 1400, 1010, 'capa31');
         fondoLight.add(fondo1);
         //fondoLight.add(fondo2)
@@ -129,8 +129,7 @@ var Juego = {
         //ledge = platforms.create(-150, 250, 'ground');
         ledge.body.immovable = true;*/
 
-        player = game.add.sprite(0, game.height - 200, 'dude');
-        player.anchor.setTo(0.5);
+        player = game.add.sprite(0, game.height - 300, 'dude');
         player.scale.setTo(0.9, 0.9);
 
         pajaro = game.add.sprite(1000, game.height - 500, 'pajaro');
@@ -227,7 +226,7 @@ var Juego = {
     update: function() {
         fondoJuego.tilePosition.x -= 0.1;
         game.camera.follow(player);
-        game.physics.arcade.collide(player, platforms);
+        var touch_ground = game.physics.arcade.collide(player, platforms);
         game.physics.arcade.collide(stars, platforms);
         game.physics.arcade.overlap(player, stars, collectStar, null, this);
         game.physics.arcade.overlap(player, pajaro, touchingEnemy, null, this);
@@ -244,9 +243,8 @@ var Juego = {
                     item.tilePosition.x += 0.5;
                 } 
             });
-
             lastSide = 'left';
-            if(player.body.touching.down){
+            if(player.body.touching.down && touch_ground){
                 isJumping = false;
                 player.animations.play('walk-left');
             }else{
@@ -265,7 +263,7 @@ var Juego = {
             });
 
             lastSide = 'right';
-            if(player.body.touching.down){
+            if(player.body.touching.down && touch_ground){
                 isJumping = false;
                 player.animations.play('walk-right');
             }else{
@@ -275,7 +273,7 @@ var Juego = {
         }
         else{
             isRunning = false;
-            if(player.body.touching.down){
+            if(player.body.touching.down && touch_ground){
                 isJumping = false;
                 if(punch.isDown){
                     isPunching = true;
@@ -308,14 +306,14 @@ var Juego = {
             player.animations.stop(null, true);
         }
 
-        if(player.body.touching.down){
+        if(player.body.touching.down && touch_ground){
             jump = false;
             doubleJumped = false;
         }else{
             jump = true;
         }
 
-        if (cursors.up.isDown && player.body.touching.down && jump == false)
+        if (cursors.up.isDown && player.body.touching.down && touch_ground && jump == false)
         {   
             isPunching = false;
             jump = true;
@@ -332,7 +330,7 @@ var Juego = {
 
         game.input.keyboard.onUpCallback = function (e) {
             if(e.keyCode == Phaser.Keyboard.ENTER || e.keyCode == Phaser.Keyboard.ESC){
-                if(!game.paused){
+                if(game.paused == false){
                     Juego.pause();
                 }else{
                     unpause();
@@ -351,15 +349,14 @@ var Juego = {
             }
         };
 
-        
+        console.log(player.body.touching.down);
         movePajaro();
     },
 
     render: function(){
-       /* 
-        platforms.forEachAlive(renderGroup, this);*/
-        //game.debug.body(pajaro);
-        //game.debug.body(player);
+        // platforms.forEachAlive(renderGroup, this);
+        // game.debug.body(pajaro);
+        // game.debug.body(player);
     },
 
     pause : function(){
@@ -374,39 +371,39 @@ var Juego = {
 }
 
 function movePajaro(){
-    console.log(pajaro.x + " " + pajaro.y);
+    // console.log(pajaro.x + " " + pajaro.y);
     if(pajaro.y <= 100){
         pajaro.body.velocity.y = +50;
-            console.log("sube 1");
+            // console.log("sube 1");
 
     }else if(pajaro.y >= 200){
         pajaro.body.velocity.y = -50;
-            console.log("sube 2");
+            // console.log("sube 2");
     }
 
     if(pajaro.x > player.x){
         if(pajaro.x <= player.x + 200){
             pajaro.animations.play('fly_left');
-            console.log("entra6");
+            // console.log("entra6");
         }else if(pajaro.x <= player.x + 300){
             pajaro.body.velocity.x = 0;
-            console.log("entra5"); 
+            // console.log("entra5"); 
         }else{
             pajaro.animations.play('fly_left');
             pajaro.body.velocity.x = -200;
-            console.log("entra4"); 
+            // console.log("entra4"); 
         }
     }else{
         if(pajaro.x >= player.x-200){
             pajaro.animations.play('fly_right');
-            console.log("entra3");
+            // console.log("entra3");
         }else if(pajaro.x >= player.x - 300){
             pajaro.body.velocity.x = 0;
-            console.log("entra2");
+            // console.log("entra2");
         }else{
             pajaro.animations.play('fly_right');
             pajaro.body.velocity.x = +200;
-            console.log("entra1");
+            // console.log("entra1");
         }
     }
 }
@@ -420,6 +417,7 @@ function renderGroup(member) {
 }
 
 function pressed_buttons(event){
+    console.log("say something");
     if(game.paused){
         if(clicked(event, continue_button, 1)){
         }else if(clicked(event, retry_button, 1)){
@@ -453,7 +451,7 @@ function clicked(event, button , fr){
 
     var pressed = event.x > x1 && event.x < x2 && event.y > y1 && event.y < y2;
     if(pressed){ button.frame = fr};
-
+    console.log("deberia despausar");
     return (pressed);
 }
 
