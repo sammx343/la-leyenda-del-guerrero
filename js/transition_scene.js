@@ -2,7 +2,7 @@ var button;
 var transitions;
 var text;
 var texts;
-var typewriter = new Typewriter();
+var n;
 
 var Transition = {
 
@@ -13,8 +13,12 @@ var Transition = {
   },
 
   create : function(){
-    texts = ["lorem ipsum 3" , "lorem ipsum 2", "lorem ipsum 1", "loremp ipsum0"];
-    transitions = 3;
+    texts = ["Lorem ipsum tua sit amet tua", 
+             "lorem ipsum 2", 
+             "lorem ipsum 1", 
+             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed \ndo eiusmod tempor consectetur adipiscing elit, sed. Duis aute \nirure dolor in reprehenderit  in voluptate."];
+    transitions = 0;
+    n = 0;
     var fondo1 = game.add.image(0, 0 , 'fondo1');
     var panel = game.add.image(15, 400, 'panel');
 
@@ -27,27 +31,43 @@ var Transition = {
     button.onInputUp.add(my_play);
     //button.onInputUp.add(my_frame);
 
-    text = game.add.text(240, 460, texts[transitions], { font: "25px Arial", fill: "#000", align: "center" });
+    text = game.add.text(240, 455, '', { font: "20px Arial", fill: "#1E335F", stroke: "#000000", align: "left" });
+    
+    // text = game.add.bitmapText(240, 460, 'myfont', texts[transitions], 35);
+    // text.tint = 0x20A0C7;
 
     game.camera.flash('#000000', 1000);
-  },
-
-  update : function(){
-    //
-  }
-}
-
-function my_play(){
-  button.frame = 0;
-  if(transitions == 0){
-    scene_transition('Game');
+    typeWriter(texts[transitions]);
+    transitions++;
   }
 }
 
 function my_frame(){
-  if(transitions>0){
-    transitions--;
-    button.frame = 1;
-    text.text = texts[transitions];
+  button.frame = 1;
+}
+
+function my_play(){
+  button.frame = 0;
+
+  if(transitions >= texts.length){
+    scene_transition('Game', 1500);
+  }
+
+  if(transitions <= texts.length-1 ){
+    console.log(texts[transitions]);
+    n = 0;
+    text.text = "";
+    typeWriter(texts[transitions]);
+  }
+  transitions++;
+}
+
+function typeWriter(txt){  
+  if(n< txt.length){  
+    text.text +=  txt.charAt(n);  
+    n++;  
+    setTimeout(function(){    
+      typeWriter(txt)
+    },30);  
   }
 }

@@ -6,4 +6,5 @@ game.state.add('Mapa', Mapa);
 game.state.add('Transition', Transition);
 //game.state.add('Game_Over', Game_Over);
 
-game.state.start('Menu');
+//game.state.start('Menu');
+game.state.start('Game');

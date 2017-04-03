@@ -5,7 +5,7 @@ var my_game;
 var button_group;
 var tween;
 var tweenBack;
-
+var toggle;
 var Mapa = {
 
   
@@ -19,7 +19,7 @@ var Mapa = {
   create : function(){
     var map = game.add.image(0, 0 , 'mapa');
     map.scale.setTo(0.67, 0.67);
-
+    toggle = false;
     jugar_buttons = game.add.button(game.width-150, game.height-100, 'jugar_buttons', null, Mapa);
     jugar_buttons.anchor.setTo(0.5,0.5);
     jugar_buttons.onInputDown.add(frame, this, 0);
@@ -48,13 +48,15 @@ var Mapa = {
 
 function addSelector(button){
   console.log("message");
-  if(button.alpha == 0.3){
+  if(toggle == false){
+    toggle = true;
     selector.visible = true;
     selector.x = nivel_1.x;
     selector.y = nivel_1.y;
     game.add.tween(jugar_buttons).to( { alpha: 1.2 }, 350, Phaser.Easing.Linear.None, true, 0, 0, false);
     game.add.tween(button).to( { alpha: 1.2 }, 350, Phaser.Easing.Linear.None, true, 0, 0, false);
   }else{
+    toggle = false;
     selector.visible = false;
     game.add.tween(jugar_buttons).to( { alpha: 0.3 }, 350, Phaser.Easing.Linear.None, true, 0, 0, false);
     game.add.tween(button).to( { alpha: 0.3 }, 350, Phaser.Easing.Linear.None, true, 0, 0, false);

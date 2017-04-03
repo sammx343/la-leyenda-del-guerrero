@@ -1,5 +1,8 @@
 var player;
+
 var pajaro;
+var bala;
+
 var platforms;
 var fondoLight;
 var cursors;
@@ -17,6 +20,9 @@ var pause_p;
 var stars;
 var score = 0;
 var scoreText;
+var healthText;
+var goldText;
+var goldAmount;
 
 var gravity = 850;
 
@@ -43,6 +49,8 @@ var Juego = {
         game.load.image('capa31', 'assets/la_leyenda/nivel1/capas_piso/capa-3-sector-1.png');
         game.load.image('capa32', 'assets/la_leyenda/nivel1/capas_piso/capa-3-sector-2.png');
 
+        game.load.bitmapFont('myfont', 'assets/font5/font.png', 'assets/font5/font.fnt');
+
         game.load.image('star', 'assets/star.png');
 
         game.load.spritesheet('pause_button', 'assets/la_leyenda/menu/pause_menu/pause_button.png', 75, 90);
@@ -59,14 +67,16 @@ var Juego = {
         //game.load.atlas('dude', 'assets/main/main0.png', null, null);
         game.load.atlasJSONHash('dude', 'assets/main/main.png', 'js/atlas/main.json');
         game.load.spritesheet('pajaro', 'assets/la_leyenda/enemigos/pajaro_spritesheet.png', 255, 229);
+        game.load.image('bala_pajaro', 'assets/la_leyenda/enemigos/bala_pajaro.png');
         //game.load.atlasJSONHash('buttons', 'assets/la_leyenda/menu/options_stylesheet.png', 'js/atlas/game_options_atlas.json');
     },
 
     create: function() {
         var tam = -100;
+        goldAmount = 0;
         lastSide = 'right';
         game.physics.startSystem(Phaser.Physics.ARCADE);
-        game.camera.flash('#000000', 2000, true);
+        game.camera.flash('#000000', 500, true);
         game.world.setBounds(0, 0, 10000, 500);
 
         fondoJuego = game.add.tileSprite(0, -10, game.world.width, game.world.height, 'sky');
@@ -131,6 +141,7 @@ var Juego = {
 
         player = game.add.sprite(0, game.height - 300, 'dude');
         player.scale.setTo(0.9, 0.9);
+        player.health = 100;
 
         pajaro = game.add.sprite(1000, game.height - 500, 'pajaro');
         pajaro.scale.setTo(0.8, 0.8);
@@ -164,17 +175,28 @@ var Juego = {
         pajaro.animations.add('fly_left', [ 0 , 0 , 0 ,1, 1, 2, 2, 3, 3, 3, 2 , 2, 1, 1], 25, true);
         pajaro.animations.add('fly_right', [ 4, 4, 4, 5, 5, 6, 6, 7, 7, 7 , 6 , 6 , 5 , 5], 25, true);
 
-        stars = game.add.group();
 
-        stars.enableBody = true;
+        bala = game.add.weapon(30,'bala_pajaro'); 
 
-        for (var i = 0; i < 12; i++){
-            var star = stars.create(i * 70, 0, 'star');
+        bala.bulletKillType = Phaser.Weapon.KILL_CAMERA_BOUNDS;
 
-            star.body.gravity.y = gravity;
-            star.body.bounce.y = 0.7 + Math.random() * 0.2;
-            star.body.bounce.x = 0.5 + Math.random() * 0.2;
-        }
+        //  The speed at which the bullet is fired
+        bala.bulletSpeed = 600;
+        bala.nextFire = 0;
+        bala.fireRate = 1000;
+        bala.trackSprite(pajaro, -40, -10, true);
+
+        // stars = game.add.group();
+
+        // stars.enableBody = true;
+
+        // for (var i = 0; i < 12; i++){
+        //     var star = stars.create(i * 70, 0, 'star');
+
+        //     star.body.gravity.y = gravity;
+        //     star.body.bounce.y = 0.7 + Math.random() * 0.2;
+        //     star.body.bounce.x = 0.5 + Math.random() * 0.2;
+        // }
 
         //scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
         cursors = game.input.keyboard.createCursorKeys();
@@ -197,10 +219,18 @@ var Juego = {
         vida.anchor.setTo(0.5);
         vida.fixedToCamera = true;
 
+        healthText = game.add.bitmapText(game.width/5.2, move*3 , 'myfont', '', 35);
+        healthText.anchor.setTo(0.5);
+        healthText.fixedToCamera = true;
+
         oro = game.add.sprite(game.width/2, move*3 , 'oro');
         oro.anchor.setTo(0.5);
-        oro.scale.setTo(0.7, 0.7);
+        oro.scale.setTo(0.6, 0.6);
         oro.fixedToCamera = true;
+
+        goldText = game.add.bitmapText(game.width/2 + oro.width/1.3, move*3 + 5 , 'myfont', '', 40);
+        goldText.anchor.setTo(0.5);
+        goldText.fixedToCamera = true;
 
         continue_button = game.add.button(game.width/2 + game.width/10 + move, game.height/2 + game.height/20, 'continue_button' , null , this);
         continue_button.anchor.setTo(0.5);
@@ -224,10 +254,16 @@ var Juego = {
     },
 
     update: function() {
+        healthText.text = player.health;
+        goldText.text = goldAmount;
         fondoJuego.tilePosition.x -= 0.1;
         game.camera.follow(player);
         var touch_ground = game.physics.arcade.collide(player, platforms);
         game.physics.arcade.collide(stars, platforms);
+
+        game.physics.arcade.collide(bala.bullets, platforms, destroyBala, null, this);
+        game.physics.arcade.collide(bala.bullets, player, hitPlayer, null, this);
+
         game.physics.arcade.overlap(player, stars, collectStar, null, this);
         game.physics.arcade.overlap(player, pajaro, touchingEnemy, null, this);
         //console.log(game.camera.atLimit);
@@ -344,12 +380,10 @@ var Juego = {
                     player.animations.getAnimation('walk-right').delay = 120
                     player.animations.getAnimation('walk-left').delay = 120
                 }
-
-                console.log("message");
             }
         };
 
-        console.log(player.body.touching.down);
+        fire();
         movePajaro();
     },
 
@@ -357,6 +391,7 @@ var Juego = {
         // platforms.forEachAlive(renderGroup, this);
         // game.debug.body(pajaro);
         // game.debug.body(player);
+        bala.debug(200,200);
     },
 
     pause : function(){
@@ -370,10 +405,18 @@ var Juego = {
     }
 }
 
+function fire() {
+    if (game.time.now > bala.nextFire && Math.abs(pajaro.x - player.x) <= 400){
+        bala.nextFire = game.time.now + bala.fireRate;
+        bala.fireAtSprite(player);
+    }
+}
+
 function movePajaro(){
     // console.log(pajaro.x + " " + pajaro.y);
     if(pajaro.y <= 100){
         pajaro.body.velocity.y = +50;
+
             // console.log("sube 1");
 
     }else if(pajaro.y >= 200){
@@ -382,6 +425,7 @@ function movePajaro(){
     }
 
     if(pajaro.x > player.x){
+        bala.trackSprite(pajaro, -40, -10, true);
         if(pajaro.x <= player.x + 200){
             pajaro.animations.play('fly_left');
             // console.log("entra6");
@@ -394,6 +438,7 @@ function movePajaro(){
             // console.log("entra4"); 
         }
     }else{
+        bala.trackSprite(pajaro, 40, -10, true);
         if(pajaro.x >= player.x-200){
             pajaro.animations.play('fly_right');
             // console.log("entra3");
@@ -467,6 +512,14 @@ function collectStar (player, star) {
     star.destroy();
     score += 10;
     //scoreText.text = 'Score: ' + score;
+}
+
+function destroyBala(){
+}
+
+function hitPlayer(player, bala){
+    player.health--;
+    bala.kill();
 }
 
 function listener () {
