@@ -15,6 +15,8 @@ var pause_button;
 var retry_button;
 var exit_button;
 
+
+
 var pause_p;
 
 var stars;
@@ -61,6 +63,11 @@ var Juego = {
         game.load.spritesheet('continue_button', 'assets/la_leyenda/menu/pause_menu/continue_button.png', 306, 131);
         game.load.spritesheet('exit_button', 'assets/la_leyenda/menu/pause_menu/exit_button.png', 119, 139);
         game.load.spritesheet('retry_button', 'assets/la_leyenda/menu/pause_menu/retry_button.png', 118 , 131);
+
+        game.load.image('pause_menu_lose', 'assets/la_leyenda/perdiste/fondo_perdiste.png');
+        game.load.spritesheet('head', 'assets/la_leyenda/perdiste/personaje/head_animation.png', 385, 353);
+        game.load.spritesheet('button_exit_lose', 'assets/la_leyenda/perdiste/button_exit_lose.png', 115, 123);
+        game.load.spritesheet('button_retry_lose', 'assets/la_leyenda/perdiste/button_retry_lose.png', 315, 128);
 
         //game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
         //game.load.spritesheet('dude', ['assets/main/main1.png'], 84, 99);
@@ -142,12 +149,12 @@ var Juego = {
         player = game.add.sprite(0, game.height - 300, 'dude');
         player.scale.setTo(0.9, 0.9);
         player.health = 100;
+        player.alive = true;
 
         pajaro = game.add.sprite(1000, game.height - 500, 'pajaro');
         pajaro.scale.setTo(0.8, 0.8);
         pajaro.anchor.setTo(0.5);
         
-
         for(let i=0;i<=6;i++){
             if(i%2==0){
                 game.add.sprite(i*1280, game.world.height - 142 - tam , 'capa11');
@@ -159,7 +166,7 @@ var Juego = {
         game.physics.arcade.enable(player);
         game.physics.arcade.enable(pajaro);
         pajaro.body.setSize(pajaro.width-pajaro.width/10, pajaro.height-pajaro.height/10, 0, 0);
-
+        pajaro.damage = 55;
         player.body.gravity.y = gravity;
         player.body.collideWorldBounds = true;
 
@@ -201,7 +208,6 @@ var Juego = {
         //scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
         cursors = game.input.keyboard.createCursorKeys();
         punch = game.input.keyboard.addKey(Phaser.Keyboard.C);
-
 
         var move = 20;
         pause_menu = game.add.sprite(game.width/2, game.height/2, 'pause_menu');
@@ -253,7 +259,7 @@ var Juego = {
         retry_button.events.onInputDown.add(listener, this);
     },
 
-    update: function() {
+    update: function(){
         healthText.text = player.health;
         goldText.text = goldAmount;
         fondoJuego.tilePosition.x -= 0.1;
@@ -270,99 +276,108 @@ var Juego = {
 
         player.body.velocity.x = 0;
 
-        if (cursors.left.isDown){   
-            isRunning = true;
-            player.body.velocity.x = -200;
-            isPunching = false;
-            fondoLight.forEach(function(item){
-                if(!game.camera.atLimit.x){
-                    item.tilePosition.x += 0.5;
-                } 
-            });
-            lastSide = 'left';
-            if(player.body.touching.down && touch_ground){
-                isJumping = false;
-                player.animations.play('walk-left');
-            }else{
-                isJumping = true;
-                player.animations.play('jump-left');
-            }
+        if(player.health <= 0){
+           player.animations.play('dead');
+           player.alive = false; 
+           player.body.setSize(player.width, player.height-10, 0, 0);
         }
-        else if (cursors.right.isDown){
-            isRunning = true;
-            player.body.velocity.x = 200;
-            isPunching = false;
-            fondoLight.forEach(function(item){
-                if(!game.camera.atLimit.x){
-                    item.tilePosition.x -= 0.5;
-                }
-            });
 
-            lastSide = 'right';
-            if(player.body.touching.down && touch_ground){
-                isJumping = false;
-                player.animations.play('walk-right');
-            }else{
-                isJumping = true;
-                player.animations.play('jump-right');
-            }
-        }
-        else{
-            isRunning = false;
-            if(player.body.touching.down && touch_ground){
-                isJumping = false;
-                if(punch.isDown){
-                    isPunching = true;
-                    if(lastSide == 'left'){ 
-                        player.animations.play('punch-left');
-                    }else { 
-                        player.animations.play('punch-right');
+        if(player.alive){
+            if (cursors.left.isDown){   
+                isRunning = true;
+                player.body.velocity.x = -200;
+                isPunching = false;
+                fondoLight.forEach(function(item){
+                    if(!game.camera.atLimit.x){
+                        item.tilePosition.x += 0.5;
                     }
+                });
+                lastSide = 'left';
+                if(player.body.touching.down && touch_ground){
+                    isJumping = false;
+                    player.animations.play('walk-left');
                 }else{
-                    if(isPunching == false){ 
-                        if(lastSide == 'left'){  
-                            player.frame = 6;
-                        }else { 
-                            player.frame = 0;
-                        }
-                    }
-                }
-            }else{
-                if(lastSide == 'left'){ 
+                    isJumping = true;
                     player.animations.play('jump-left');
-                }else { 
+                }
+            }
+            else if (cursors.right.isDown){
+                isRunning = true;
+                player.body.velocity.x = 200;
+                isPunching = false;
+                fondoLight.forEach(function(item){
+                    if(!game.camera.atLimit.x){
+                        item.tilePosition.x -= 0.5;
+                    }
+                });
+
+                lastSide = 'right';
+                if(player.body.touching.down && touch_ground){
+                    isJumping = false;
+                    player.animations.play('walk-right');
+                }else{
+                    isJumping = true;
                     player.animations.play('jump-right');
                 }
             }
-        }
-       /* console.log(isPunching);
-        console.log(player.animations.currentAnim.frame);*/
-        if(player.animations.currentAnim.frame == 20 || player.animations.currentAnim.frame == 16){
-            isPunching = false;
-            player.animations.stop(null, true);
-        }
+            else{
+                isRunning = false;
+                if(player.body.touching.down && touch_ground){
+                    isJumping = false;
+                    if(punch.isDown){
+                        isPunching = true;
+                        if(lastSide == 'left'){ 
+                            player.animations.play('punch-left');
+                        }else { 
+                            player.animations.play('punch-right');
+                        }
+                    }else{
+                        if(isPunching == false){ 
+                            if(lastSide == 'left'){  
+                                player.frame = 6;
+                            }else { 
+                                player.frame = 0;
+                            }
+                        }
+                    }
+                }else{
+                    if(lastSide == 'left'){ 
+                        player.animations.play('jump-left');
+                    }else{
+                        player.animations.play('jump-right');
+                    }
+                }
+            }
+           /* console.log(isPunching);
+            console.log(player.animations.currentAnim.frame);*/
+            if(player.animations.currentAnim.frame == 20 || player.animations.currentAnim.frame == 16){
+                isPunching = false;
+                player.animations.stop(null, true);
+            }
 
-        if(player.body.touching.down && touch_ground){
-            jump = false;
-            doubleJumped = false;
-        }else{
-            jump = true;
-        }
+            if(player.body.touching.down && touch_ground){
+                jump = false;
+                doubleJumped = false;
+            }else{
+                jump = true;
+            }
 
-        if (cursors.up.isDown && player.body.touching.down && touch_ground && jump == false)
-        {   
-            isPunching = false;
-            jump = true;
-            player.body.velocity.y = -500;
-            cursors.up.isDown = false;
-        }else{
-            if(jump){
-                if(doubleJumped == false && cursors.up.isDown){
-                    player.body.velocity.y = -450;
-                    doubleJumped = true;
+            if (cursors.up.isDown && player.body.touching.down && touch_ground && jump == false)
+            {   
+                isPunching = false;
+                jump = true;
+                player.body.velocity.y = -500;
+                cursors.up.isDown = false;
+            }else{
+                if(jump){
+                    if(doubleJumped == false && cursors.up.isDown){
+                        player.body.velocity.y = -450;
+                        doubleJumped = true;
+                    }
                 }
             }
         }
+        
 
         game.input.keyboard.onUpCallback = function (e) {
             if(e.keyCode == Phaser.Keyboard.ENTER || e.keyCode == Phaser.Keyboard.ESC){
@@ -382,7 +397,6 @@ var Juego = {
                 }
             }
         };
-
         fire();
         movePajaro();
     },
@@ -496,7 +510,6 @@ function clicked(event, button , fr){
 
     var pressed = event.x > x1 && event.x < x2 && event.y > y1 && event.y < y2;
     if(pressed){ button.frame = fr};
-    console.log("deberia despausar");
     return (pressed);
 }
 
@@ -518,7 +531,7 @@ function destroyBala(){
 }
 
 function hitPlayer(player, bala){
-    player.health--;
+    player.health -= pajaro.damage;
     bala.kill();
 }
 
