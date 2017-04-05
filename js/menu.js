@@ -9,7 +9,7 @@ var Menu = {
     game.load.image('titulo', 'assets/la_leyenda/menu/identificador.png');
     game.load.image('fondo', 'assets/la_leyenda/menu/fondo.png');
     game.load.atlasJSONHash('jugarButton', 'assets/la_leyenda/menu/botones-jugar.png', 'js/atlas/menu_button.json');
-    game.load.bitmapFont('myfont', 'assets/font5/font.png', 'assets/font5/font.fnt');
+    
   },
 
   create : function(){

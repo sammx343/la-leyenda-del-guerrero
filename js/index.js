@@ -8,6 +8,7 @@ var fondoLight;
 var cursors;
 var ground;
 
+//MENU DE PAUSA
 var vida;
 var oro;
 var continue_button;
@@ -15,9 +16,13 @@ var pause_button;
 var retry_button;
 var exit_button;
 
-
-
 var pause_p;
+
+//MENU DE DERROTA
+var pause_menu_lose;
+var head;
+var button_exit_lose;
+var button_retry_lose;
 
 var stars;
 var score = 0;
@@ -166,7 +171,7 @@ var Juego = {
         game.physics.arcade.enable(player);
         game.physics.arcade.enable(pajaro);
         pajaro.body.setSize(pajaro.width-pajaro.width/10, pajaro.height-pajaro.height/10, 0, 0);
-        pajaro.damage = 55;
+        pajaro.damage = 30;
         player.body.gravity.y = gravity;
         player.body.collideWorldBounds = true;
 
@@ -257,6 +262,41 @@ var Juego = {
         exit_button.visible = false;
 
         retry_button.events.onInputDown.add(listener, this);
+
+        pause_menu_lose = game.add.sprite(game.width/2, game.height/2, 'pause_menu_lose');
+        pause_menu_lose.scale.setTo(0.8, 0.8);
+        pause_menu_lose.anchor.setTo(0.5);
+        pause_menu_lose.fixedToCamera = true;
+        pause_menu_lose.visible = false;
+        pause_menu_lose.alpha = 0;
+
+        head = game.add.sprite(game.width/4.4, game.height/2, 'head');
+        head.scale.setTo(0.8, 0.8);
+        head.anchor.setTo(0.5);
+        head.fixedToCamera = true;
+        head.visible = false;
+        head.alpha = 0;
+        head.animations.add('negation', [0,1,2,1], 7 , true);
+
+        button_exit_lose = game.add.button(game.width/2 - game.width/12 + move, game.height/2 + game.height/7, 'button_exit_lose' , null , this);
+        button_exit_lose.anchor.setTo(0.5);
+        button_exit_lose.scale.setTo(0.8, 0.8);
+        button_exit_lose.fixedToCamera = true;
+        button_exit_lose.visible = false;
+        button_exit_lose.alpha = 0;
+        button_exit_lose.upAction = function(){game.state.start('Menu')};
+        button_exit_lose.onInputDown.add(button_sprite_down);
+        button_exit_lose.onInputUp.add(button_sprite_up);
+
+        button_retry_lose = game.add.button(game.width/2 + game.width/10 + move, game.height/2 + game.height/7, 'button_retry_lose' , null , this);
+        button_retry_lose.anchor.setTo(0.5);
+        button_retry_lose.scale.setTo(0.8, 0.8);
+        button_retry_lose.fixedToCamera = true;
+        button_retry_lose.visible = false;
+        button_retry_lose.alpha = 0;
+        button_retry_lose.upAction = function(){game.state.start('Game')};
+        button_retry_lose.onInputDown.add(button_sprite_down);
+        button_retry_lose.onInputUp.add(button_sprite_up);
     },
 
     update: function(){
@@ -376,6 +416,12 @@ var Juego = {
                     }
                 }
             }
+        }else{
+           tween(pause_menu_lose);
+           tween(head);
+           tween(button_retry_lose);
+           tween(button_exit_lose);
+           head.animations.play('negation');
         }
         
 
@@ -409,13 +455,15 @@ var Juego = {
     },
 
     pause : function(){
-        game.input.onDown.add(pressed_buttons, self);
-        game.input.onUp.add(released_buttons, self);
-        pause_menu.visible = true;
-        continue_button.visible = true;
-        retry_button.visible = true;
-        exit_button.visible = true;
-        game.paused = true;
+        if(player.alive){
+            game.input.onDown.add(pressed_buttons, self);
+            game.input.onUp.add(released_buttons, self);
+            pause_menu.visible = true;
+            continue_button.visible = true;
+            retry_button.visible = true;
+            exit_button.visible = true;
+            game.paused = true;
+        }
     }
 }
 
@@ -537,4 +585,9 @@ function hitPlayer(player, bala){
 
 function listener () {
     console.log("message");
+}
+
+function tween(Sprite){
+    Sprite.visible = true;
+    game.add.tween(Sprite).to( { alpha: 1.2 }, 800, Phaser.Easing.Linear.None, true, 0, 0, false);
 }

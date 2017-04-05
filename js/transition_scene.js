@@ -27,8 +27,8 @@ var Transition = {
     button.anchor.setTo(0.5,0.5);
     button.scale.setTo(0.8,0.8);
 
-    button.onInputDown.add(my_frame);
-    button.onInputUp.add(my_play);
+    button.onInputDown.add(button_sprite_down);
+    button.onInputUp.add(button_sprite_up);
     //button.onInputUp.add(my_frame);
 
     text = game.add.text(240, 455, '', { font: "20px Arial", fill: "#1E335F", stroke: "#000000", align: "left" });
@@ -36,19 +36,15 @@ var Transition = {
     // text = game.add.bitmapText(240, 460, 'myfont', texts[transitions], 35);
     // text.tint = 0x20A0C7;
 
+    button.upAction = change_transition;
+
     game.camera.flash('#000000', 1000);
     typeWriter(texts[transitions]);
     transitions++;
   }
 }
 
-function my_frame(){
-  button.frame = 1;
-}
-
-function my_play(){
-  button.frame = 0;
-
+function change_transition(){
   if(transitions >= texts.length){
     scene_transition('Game', 1500);
   }
