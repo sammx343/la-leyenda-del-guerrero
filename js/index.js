@@ -4,6 +4,7 @@ var pajaro;
 var bala;
 
 var platforms;
+var platforms2;
 var fondoLight;
 var cursors;
 var ground;
@@ -41,12 +42,11 @@ var lastSide;
 var punch;
 var isPunching = false;
 var isRunning = false;
-var isJumping = false;
+var inGround = true;
 
 var Juego = {
 
     preload : function() {
-
         game.load.image('sky', 'assets/la_leyenda/nivel1/capas_piso/fondo-estatico.png');
         game.load.image('capa11', 'assets/la_leyenda/nivel1/capas_piso/capa-1-sector-1.png');
         game.load.image('capa12', 'assets/la_leyenda/nivel1/capas_piso/capa-1-sector-2.png');
@@ -63,6 +63,9 @@ var Juego = {
         game.load.spritesheet('pause_button', 'assets/la_leyenda/menu/pause_menu/pause_button.png', 75, 90);
         game.load.image('vida', 'assets/la_leyenda/menu/vida.png');
         game.load.image('oro', 'assets/la_leyenda/menu/oro.png');
+
+        game.load.image('oro_5', 'assets/la_leyenda/objetos_mundos/oro/oro_pieza_grande.png');
+        game.load.image('oro_1', 'assets/la_leyenda/objetos_mundos/oro/oro_pieza_pequeña.png');
 
         game.load.image('pause_menu', 'assets/la_leyenda/menu/pause_menu/pausa-back.png');
         game.load.spritesheet('continue_button', 'assets/la_leyenda/menu/pause_menu/continue_button.png', 306, 131);
@@ -83,7 +86,7 @@ var Juego = {
         //game.load.atlasJSONHash('buttons', 'assets/la_leyenda/menu/options_stylesheet.png', 'js/atlas/game_options_atlas.json');
     },
 
-    create: function() {
+    create: function(){
         var tam = -100;
         goldAmount = 0;
         lastSide = 'right';
@@ -96,36 +99,16 @@ var Juego = {
 
         fondoLight = game.add.group();
         fondo1 = game.add.tileSprite(1280*0, 0, 1400, 1010, 'capa32');
-        //fondo2 = game.add.tileSprite(1280*1, 8, 1400, 1010, 'capa31');
+
         fondoLight.add(fondo1);
-        //fondoLight.add(fondo2)
-        /*for(let i=0; i<=12; i++){
-            let fondo1;
-            if(i%2==0){
-                fondo1 = game.add.tileSprite(1280*i, 0, 1400, 1010, 'capa32');
-                //plantasFondo1.scale.setTo(0.7 , 0.6);
-                //plantasFondo1.fixedToCamera = true;
-            }else{
-                fondo1 = game.add.tileSprite(1280*i, 8, 1400, 1010, 'capa31');
-                //plantasFondo2.scale.setTo(0.7 , 0.6);
-                //plantasFondo2.fixedToCamera = true;
-            }
-            fondoLight.add(fondo1)
-        }
-*/
+
         fondoLight.scale.setTo(0.72 , 0.62);
         fondoLight.fixedToCamera = true;
-        /*fondoLight.forEachAlive(function(item){
-            item.scale.setTo(0.7 , 0.6);
-        });*/
-
-        //fondoJuego.scale.setTo(1.5,1.3);
 
         platforms = game.add.group();
         platforms.enableBodyDebug = true;
         platforms.renderable = true;
         platforms.enableBody = true;
-
         
         for(let i=0;i<=6;i++){
             if(i%3==0){
@@ -155,23 +138,49 @@ var Juego = {
         player.scale.setTo(0.9, 0.9);
         player.health = 100;
         player.alive = true;
-
+        player.oro = 0;
+        player.speed = 200;
         pajaro = game.add.sprite(1000, game.height - 500, 'pajaro');
         pajaro.scale.setTo(0.8, 0.8);
         pajaro.anchor.setTo(0.5);
         
-        for(let i=0;i<=6;i++){
-            if(i%2==0){
-                game.add.sprite(i*1280, game.world.height - 142 - tam , 'capa11');
+        monedas = game.add.group();
+
+        monedas.enableBody = true;
+
+        for (var i = 0; i < 40; i++){
+            var moneda;
+            if(i%4==0){
+                moneda = monedas.create(i * 10, 0, 'oro_5');
+                moneda.scale.setTo(0.65, 0.65);
+                moneda.body.acceleration.x = rnd(-100,100);
             }else{
-                game.add.sprite(i*1280, game.world.height - 149  - tam , 'capa12');
+                moneda = monedas.create(i * 10, 0, 'oro_1');
+                moneda.body.acceleration.x = rnd(-30,30);
             }
+            //moneda.orientation = rnd(0,1)? (moneda.body.acceleration.x = rnd(-60,60) ) : (moneda.orientation = "left");
+          
+            moneda.body.gravity.y = gravity-300;
+            moneda.body.bounce.y = 0.8 + Math.random() * 0.2;
+        }
+
+        platforms2 = game.add.group();
+        platforms2.enableBody = true;
+
+        for(let i=0;i<=12;i++){
+            var piso2;
+            if(i%2==0){
+                piso2 = platforms2.create(i*1280, game.world.height - 146 - tam , 'capa11');
+            }else{
+                piso2 = platforms2.create(i*1280, game.world.height - 153  - tam , 'capa12');
+            }
+            piso2.fixedToCamera = true;
         }
 
         game.physics.arcade.enable(player);
         game.physics.arcade.enable(pajaro);
         pajaro.body.setSize(pajaro.width-pajaro.width/10, pajaro.height-pajaro.height/10, 0, 0);
-        pajaro.damage = 30;
+        pajaro.damage = 5;
         player.body.gravity.y = gravity;
         player.body.collideWorldBounds = true;
 
@@ -197,18 +206,6 @@ var Juego = {
         bala.nextFire = 0;
         bala.fireRate = 1000;
         bala.trackSprite(pajaro, -40, -10, true);
-
-        // stars = game.add.group();
-
-        // stars.enableBody = true;
-
-        // for (var i = 0; i < 12; i++){
-        //     var star = stars.create(i * 70, 0, 'star');
-
-        //     star.body.gravity.y = gravity;
-        //     star.body.bounce.y = 0.7 + Math.random() * 0.2;
-        //     star.body.bounce.x = 0.5 + Math.random() * 0.2;
-        // }
 
         //scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
         cursors = game.input.keyboard.createCursorKeys();
@@ -300,15 +297,20 @@ var Juego = {
     },
 
     update: function(){
+        var damaged = player.health;
+
         healthText.text = player.health;
-        goldText.text = goldAmount;
+        goldText.text = player.oro;
         fondoJuego.tilePosition.x -= 0.1;
         game.camera.follow(player);
-        var touch_ground = game.physics.arcade.collide(player, platforms);
+        inGround = game.physics.arcade.collide(player, platforms);
         game.physics.arcade.collide(stars, platforms);
 
+        game.physics.arcade.collide(monedas, platforms, null, null, this);
+        game.physics.arcade.overlap(monedas, player, getMonedas, null, this);
+
+        game.physics.arcade.overlap(bala.bullets, player, hitPlayer, null, this);
         game.physics.arcade.collide(bala.bullets, platforms, destroyBala, null, this);
-        game.physics.arcade.collide(bala.bullets, player, hitPlayer, null, this);
 
         game.physics.arcade.overlap(player, stars, collectStar, null, this);
         game.physics.arcade.overlap(player, pajaro, touchingEnemy, null, this);
@@ -323,99 +325,8 @@ var Juego = {
         }
 
         if(player.alive){
-            if (cursors.left.isDown){   
-                isRunning = true;
-                player.body.velocity.x = -200;
-                isPunching = false;
-                fondoLight.forEach(function(item){
-                    if(!game.camera.atLimit.x){
-                        item.tilePosition.x += 0.5;
-                    }
-                });
-                lastSide = 'left';
-                if(player.body.touching.down && touch_ground){
-                    isJumping = false;
-                    player.animations.play('walk-left');
-                }else{
-                    isJumping = true;
-                    player.animations.play('jump-left');
-                }
-            }
-            else if (cursors.right.isDown){
-                isRunning = true;
-                player.body.velocity.x = 200;
-                isPunching = false;
-                fondoLight.forEach(function(item){
-                    if(!game.camera.atLimit.x){
-                        item.tilePosition.x -= 0.5;
-                    }
-                });
-
-                lastSide = 'right';
-                if(player.body.touching.down && touch_ground){
-                    isJumping = false;
-                    player.animations.play('walk-right');
-                }else{
-                    isJumping = true;
-                    player.animations.play('jump-right');
-                }
-            }
-            else{
-                isRunning = false;
-                if(player.body.touching.down && touch_ground){
-                    isJumping = false;
-                    if(punch.isDown){
-                        isPunching = true;
-                        if(lastSide == 'left'){ 
-                            player.animations.play('punch-left');
-                        }else { 
-                            player.animations.play('punch-right');
-                        }
-                    }else{
-                        if(isPunching == false){ 
-                            if(lastSide == 'left'){  
-                                player.frame = 6;
-                            }else { 
-                                player.frame = 0;
-                            }
-                        }
-                    }
-                }else{
-                    if(lastSide == 'left'){ 
-                        player.animations.play('jump-left');
-                    }else{
-                        player.animations.play('jump-right');
-                    }
-                }
-            }
-           /* console.log(isPunching);
-            console.log(player.animations.currentAnim.frame);*/
-            if(player.animations.currentAnim.frame == 20 || player.animations.currentAnim.frame == 16){
-                isPunching = false;
-                player.animations.stop(null, true);
-            }
-
-            if(player.body.touching.down && touch_ground){
-                jump = false;
-                doubleJumped = false;
-            }else{
-                jump = true;
-            }
-
-            if (cursors.up.isDown && player.body.touching.down && touch_ground && jump == false)
-            {   
-                isPunching = false;
-                jump = true;
-                player.body.velocity.y = -500;
-                cursors.up.isDown = false;
-            }else{
-                if(jump){
-                    if(doubleJumped == false && cursors.up.isDown){
-                        player.body.velocity.y = -450;
-                        doubleJumped = true;
-                    }
-                }
-            }
+            //playerMovement();
+            movement();
         }else{
            tween(pause_menu_lose);
            tween(head);
@@ -445,6 +356,8 @@ var Juego = {
         };
         fire();
         movePajaro();
+        changeHealthColor(damaged);
+
     },
 
     render: function(){
@@ -516,7 +429,7 @@ function movePajaro(){
 }
 
 function touchingEnemy(player, enemy){
-    console.log(enemy.key);
+    //console.log(enemy.key);
 }
 
 function renderGroup(member) {
@@ -524,7 +437,6 @@ function renderGroup(member) {
 }
 
 function pressed_buttons(event){
-    console.log("say something");
     if(game.paused){
         if(clicked(event, continue_button, 1)){
         }else if(clicked(event, retry_button, 1)){
@@ -569,13 +481,14 @@ function unpause(){
     game.paused = false;
 }
 
-function collectStar (player, star) {
+function collectStar(player, star){
     star.destroy();
     score += 10;
     //scoreText.text = 'Score: ' + score;
 }
 
-function destroyBala(){
+function destroyBala(bala, piso){
+    bala.kill();
 }
 
 function hitPlayer(player, bala){
@@ -584,10 +497,35 @@ function hitPlayer(player, bala){
 }
 
 function listener () {
-    console.log("message");
 }
 
 function tween(Sprite){
     Sprite.visible = true;
     game.add.tween(Sprite).to( { alpha: 1.2 }, 800, Phaser.Easing.Linear.None, true, 0, 0, false);
+}
+
+function getMonedas(player, moneda){
+    moneda.kill();
+    if(moneda.key == 'oro_5'){
+        player.oro += 5;
+    }else{
+        player.oro += 1;
+    }
+    goldText.tint = 0xFFFF00;
+    setTimeout(function(){    
+      goldText.tint = 0xffffff;
+    },300)
+}
+
+function changeHealthColor(damaged){
+    if(player.health != damaged){
+        healthText.tint = 0xff0000;
+        setTimeout(function(){    
+          healthText.tint = 0xffffff;
+        },300)  
+    }
+
+    if(player.health < 0){
+        player.health = 0;
+    }
 }
