@@ -46,7 +46,7 @@ var Transition = {
 
 function change_transition(){
   if(transitions >= texts.length){
-    scene_transition('Game', 1500);
+    scene_transition('Mundo1', 1500);
   }
 
   if(transitions <= texts.length-1 ){
