@@ -7,9 +7,6 @@ var n;
 var Transition = {
 
   preload: function(){
-    game.load.image('panel', 'assets/la_leyenda/transition/panel.png');
-    game.load.image('fondo1', 'assets/la_leyenda/transition/fondo_aldea1.png');
-    game.load.spritesheet('buttons', 'assets/la_leyenda/transition/buttons.png', 107, 108);
   },
 
   create : function(){

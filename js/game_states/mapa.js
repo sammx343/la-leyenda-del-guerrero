@@ -10,10 +10,6 @@ var Mapa = {
 
   
   preload : function(){
-    game.load.image('mapa', 'assets/la_leyenda/mapa/MAPA.png');
-    game.load.image('selector', 'assets/la_leyenda/mapa/selector.png');
-    game.load.spritesheet('jugar_buttons', 'assets/la_leyenda/mapa/jugar_buttons.png', 212 , 78);
-    game.load.spritesheet('nivel_1', 'assets/la_leyenda/mapa/nivel_1.png', 97 , 92);
   },
 
   create : function(){

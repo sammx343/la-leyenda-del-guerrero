@@ -18,19 +18,28 @@ birds = function(x,y){
   bird.animations.add('fly_right', [ 4, 4, 4, 5, 5, 6, 6, 7, 7, 7 , 6 , 6 , 5 , 5], 25, true);
   bird.id = id++;
   bird.died = false;
+  bird.health = 75;
   bird.bala = game.add.weapon(30,'bala_pajaro'); 
   bird.bala.bulletKillType = Phaser.Weapon.KILL_CAMERA_BOUNDS;
   bird.bala.bulletSpeed = 400;
   bird.bala.nextFire = 0;
   bird.bala.fireRate = 3000;
   bird.bala.trackSprite(bird, -40, -10, true);
+  bird.punchable = true;
   this.bird = bird;
 }
 
 birds.prototype.update = function(){
   bird = this.bird;
 
-  if(bird.alive){
+  let frame;
+
+  if(bird.health <= 0){
+    bird.died = true;
+  }
+
+  if(bird.died == false){
+    frame = bird.frame;
     //console.log(bird.y + " minHeigth: " + bird.minHeigth +  " maxHeigth: "  + bird.maxHeigth + " id " + bird.id);
     if(bird.y <= bird.minHeigth){
         bird.body.velocity.y = +bird.velocityY;
@@ -67,12 +76,17 @@ birds.prototype.update = function(){
     }
 
     birdFire(bird);
-
     game.physics.arcade.overlap(bird.bala.bullets, player, hitPlayer, null, this);
     game.physics.arcade.overlap(bird, player, hitBird, null, this);
     game.physics.arcade.collide(bird.bala.bullets, platforms, destroyBala, null, this);
+    game.physics.arcade.overlap(platforms, bird,  birdTouchesGround, null, this);
+
+  }else{
+    let birdTween = game.add.tween(bird).to( { alpha: 0 }, 200, Phaser.Easing.Linear.None, true, 0, 0, false);
+    bird.frame = frame;
+    bird.animations.stop(null, true);
+    bird.body.gravity.y = gravity-200;
   }
-  
 }
 
 function birdFire(bird){
@@ -83,16 +97,38 @@ function birdFire(bird){
 }
 
 function destroyBala(bala, piso){
+    console.log(piso);
     bala.kill();
 }
 
 function hitBird(bird, player){
-  if(Punch){
-    bird.died = true;
+  if(Punch && bird.punchable){
+    bird.punchable = false;
+    bird.health -= player.damage;
+    damageText(bird, player.damage);
   }
 }
 
 function hitPlayer(player, bala){
   player.health -= 2;
   bala.kill();
+  damageText(player, 2)
+}
+
+function birdTouchesGround(bird, platforms){
+  console.log(bird);
+}
+
+function damageText(hitted, damage){
+  var txtdamage;
+  if(hitted.anchor.x == 0.5){
+    txtdamage = game.add.bitmapText(hitted.x , hitted.y-hitted.height/2, 'myfont', "-" + damage, 15);
+  }else{
+    txtdamage = game.add.bitmapText(hitted.x + hitted.width/2 , hitted.y, 'myfont', "-" + damage, 15);
+  }
+  game.add.tween(txtdamage).to( { alpha: 0 }, 800, Phaser.Easing.Linear.None, true, 0, 0, false);
+  txtdamage.tint = 0xFF0000;
+  setTimeout(function(){    
+    hitted.punchable = true;
+  },500);
 }

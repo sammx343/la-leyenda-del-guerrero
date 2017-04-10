@@ -47,41 +47,7 @@ var enemies;
 var Mundo1 = {
 
     preload : function() {
-        game.load.image('sky', 'assets/la_leyenda/nivel1/capas_piso/fondo-estatico.png');
-        game.load.image('capa11', 'assets/la_leyenda/nivel1/capas_piso/capa-1-sector-1.png');
-        game.load.image('capa12', 'assets/la_leyenda/nivel1/capas_piso/capa-1-sector-2.png');
-        game.load.image('capa21', 'assets/la_leyenda/nivel1/capas_piso/capa-2-sector-1.png');
-        game.load.image('capa22', 'assets/la_leyenda/nivel1/capas_piso/capa-2-sector-2.png');
-        game.load.image('capa23', 'assets/la_leyenda/nivel1/capas_piso/capa-2-sector-3.png');
-        game.load.image('capa31', 'assets/la_leyenda/nivel1/capas_piso/capa-3-sector-1.png');
-        game.load.image('capa32', 'assets/la_leyenda/nivel1/capas_piso/capa-3-sector-2.png');
-
-        game.load.bitmapFont('myfont', 'assets/font5/font.png', 'assets/font5/font.fnt');
-
-        game.load.image('star', 'assets/star.png');
-
-        game.load.spritesheet('pause_button', 'assets/la_leyenda/menu/pause_menu/pause_button.png', 75, 90);
-        game.load.image('vida', 'assets/la_leyenda/menu/vida.png');
-        game.load.image('oro', 'assets/la_leyenda/menu/oro.png');
-
-        game.load.image('oro_5', 'assets/la_leyenda/objetos_mundos/oro/oro_pieza_grande.png');
-        game.load.image('oro_1', 'assets/la_leyenda/objetos_mundos/oro/oro_pieza_pequeña.png');
-
-        game.load.image('pause_menu', 'assets/la_leyenda/menu/pause_menu/pausa-back.png');
-        game.load.spritesheet('continue_button', 'assets/la_leyenda/menu/pause_menu/continue_button.png', 306, 131);
-        game.load.spritesheet('exit_button', 'assets/la_leyenda/menu/pause_menu/exit_button.png', 119, 139);
-        game.load.spritesheet('retry_button', 'assets/la_leyenda/menu/pause_menu/retry_button.png', 118 , 131);
-
-        game.load.image('pause_menu_lose', 'assets/la_leyenda/perdiste/fondo_perdiste.png');
-        game.load.spritesheet('head', 'assets/la_leyenda/perdiste/personaje/head_animation.png', 385, 353);
-        game.load.spritesheet('button_exit_lose', 'assets/la_leyenda/perdiste/button_exit_lose.png', 115, 123);
-        game.load.spritesheet('button_retry_lose', 'assets/la_leyenda/perdiste/button_retry_lose.png', 315, 128);
-
         
-        game.load.atlasJSONHash('dude', 'assets/la_leyenda/heroe/heroe.png', 'js/atlas/heroe.json');
-        //game.load.atlasJSONHash('heroe', 'assets/main/main.png', 'js/atlas/main.json');
-        game.load.spritesheet('pajaro', 'assets/la_leyenda/enemigos/pajaro_spritesheet.png', 255, 229);
-        game.load.image('bala_pajaro', 'assets/la_leyenda/enemigos/bala_pajaro.png');
     },
 
     create: function(){
@@ -89,7 +55,7 @@ var Mundo1 = {
         enemies = game.add.group();
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.camera.flash('#000000', 500, true);
-        game.world.setBounds(0, 0, 10000, 500);
+        game.world.setBounds(0, 0, 2500, 500);
 
         fondoJuego = game.add.tileSprite(0, -10, game.world.width, game.world.height, 'sky');
         fondoJuego.fixedToCamera = true;
@@ -149,10 +115,10 @@ var Mundo1 = {
 
         enemies = [];
 
-        for (var i = 0; i < 3; i++){
-          enemies.push(new birds(1000*(i+1), game.height - 500));
+        for (var i = 0; i < 4; i++){
+          enemies.push(new birds(500*(i+1), game.height - 500));
         }
-        
+
         platforms2 = game.add.group();
         platforms2.enableBody = true;
 
@@ -175,6 +141,7 @@ var Mundo1 = {
 
     update: function(){
         var damaged = player.health;
+        var manyAlive = 0;
 
         healthText.text = player.health;
         goldText.text = player.oro;
@@ -194,7 +161,10 @@ var Mundo1 = {
         //console.log(game.camera.atLimit);
 
         for (var i = 0; i < enemies.length; i++){
-                enemies[i].update();
+            enemies[i].update();
+            if(enemies[i].bird.died == false){
+                manyAlive++;
+            }
         }
 
         update_player();
@@ -225,14 +195,16 @@ var Mundo1 = {
                 }
             }
         };
+        console.log(manyAlive);
         changeHealthColor(damaged);
     },
 
     render: function(){
         // platforms.forEachAlive(renderGroup, this);
-        // game.debug.body(pajaro);
-        //game.debug.body(player);
-        //bala.debug(200,200);
+        // game.debug.body(player);
+        // for (var i = 0; i < enemies.length; i++){
+        //     game.debug.body(enemies[i].bird);
+        // }
     },
 
     pause : function(){

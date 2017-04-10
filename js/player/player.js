@@ -9,12 +9,13 @@ var Anim;
 function create_player(){
   player = game.add.sprite(0, game.height - 300, 'dude');
   player.scale.setTo(0.75);
-  player.health = 1;
+  player.health = 100;
   player.alive = true;
   player.oro = 0;
   player.speed = 180;
   player.died = false;
   player.alive = true;
+  player.damage = 25;
   Side = "Right";
 
   game.physics.arcade.enable(player);
