@@ -12,6 +12,8 @@ var ground;
 //MENU DE PAUSA
 var vida;
 var oro;
+var sabiduria;
+var sabiduriaText;
 var continue_button;
 var pause_button;
 var retry_button;
@@ -25,11 +27,19 @@ var head;
 var button_exit_lose;
 var button_retry_lose;
 
+//MENU DE VICTORIA
+
+var menu_win;
+var head_win;
+var button_retry_win;
+var button_continue_win;
+
 var stars;
 var score = 0;
 var scoreText;
 var healthText;
 var goldText;
+var finalGoldText;
 
 var gravity = 850;
 
@@ -43,6 +53,9 @@ var isRunning = false;
 var inGround = true;
 
 var enemies;
+var showMenuOnce;
+var enemyNumber;
+var birdsNumber;
 
 var Mundo1 = {
 
@@ -52,7 +65,8 @@ var Mundo1 = {
 
     create: function(){
         var tam = -100;
-        enemies = game.add.group();
+        showMenuOnce = false;
+
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.camera.flash('#000000', 500, true);
         game.world.setBounds(0, 0, 2500, 500);
@@ -62,7 +76,6 @@ var Mundo1 = {
 
         fondoLight = game.add.group();
         fondo1 = game.add.tileSprite(1280*0, 0, 1400, 1010, 'capa32');
-
         fondoLight.add(fondo1);
 
         fondoLight.scale.setTo(0.72 , 0.62);
@@ -72,7 +85,7 @@ var Mundo1 = {
         platforms.enableBodyDebug = true;
         platforms.renderable = true;
         platforms.enableBody = true;
-        
+        birdsNumber = 15;
         for(let i=0;i<=6;i++){
             if(i%3==0){
                 ground = platforms.create(i*1280, game.world.height - 350  - tam , 'capa21');
@@ -115,8 +128,8 @@ var Mundo1 = {
 
         enemies = [];
 
-        for (var i = 0; i < 4; i++){
-          enemies.push(new birds(500*(i+1), game.height - 500));
+        for (var i = 0; i < birdsNumber; i++){
+          enemies.push(new birds(100*(i+1), game.height - 500));
         }
 
         platforms2 = game.add.group();
@@ -141,10 +154,8 @@ var Mundo1 = {
 
     update: function(){
         var damaged = player.health;
-        var manyAlive = 0;
+        enemyNumber = 0;
 
-        healthText.text = player.health;
-        goldText.text = player.oro;
         fondoJuego.tilePosition.x -= 0.1;
         game.camera.follow(player);
         inGround = game.physics.arcade.collide(player, platforms);
@@ -162,19 +173,24 @@ var Mundo1 = {
 
         for (var i = 0; i < enemies.length; i++){
             enemies[i].update();
+            game.physics.arcade.overlap(enemies[i].bird, player, hitEnemy, null, this);
             if(enemies[i].bird.died == false){
-                manyAlive++;
+                enemyNumber++;
             }
         }
 
         update_player();
 
-        if(player.alive == false){
-               tween(pause_menu_lose, 1000);
-               tween(head, 1000);
-               tween(button_retry_lose, 1000);
-               tween(button_exit_lose, 1000);
-               head.animations.play('negation');
+        if(enemyNumber<= 0 && showMenuOnce == false ){
+            showWin();
+        }
+
+        if(player.alive == false && showMenuOnce == false ){
+            showLose();        
+        }
+
+        if(enemyNumber <= 0 || player.alive == false){
+            finalGoldText.text = player.gold;
         }
 
         game.input.keyboard.onUpCallback = function (e) {
@@ -195,20 +211,20 @@ var Mundo1 = {
                 }
             }
         };
-        console.log(manyAlive);
         changeHealthColor(damaged);
+    console.log(player.exp );
     },
 
     render: function(){
-        // platforms.forEachAlive(renderGroup, this);
-        // game.debug.body(player);
-        // for (var i = 0; i < enemies.length; i++){
-        //     game.debug.body(enemies[i].bird);
-        // }
+        platforms.forEachAlive(renderGroup, this);
+        game.debug.body(player);
+        for (var i = 0; i < enemies.length; i++){
+            game.debug.body(enemies[i].bird);
+        }
     },
 
     pause : function(){
-        if(player.died == false){
+        if(player.died == false && enemyNumber>0){
             game.input.onDown.add(pressed_buttons, self);
             game.input.onUp.add(released_buttons, self);
             pause_menu.visible = true;
@@ -282,10 +298,11 @@ function listener () {
 
 function getMonedas(player, moneda){
     moneda.kill();
+    goldText.text = player.gold;
     if(moneda.key == 'oro_5'){
-        player.oro += 5;
+        player.gold += 5;
     }else{
-        player.oro += 1;
+        player.gold += 1;
     }
     goldText.tint = 0xFFFF00;
     setTimeout(function(){    
@@ -294,6 +311,7 @@ function getMonedas(player, moneda){
 }
 
 function changeHealthColor(damaged){
+    healthText.text = player.health;
     if(player.health != damaged){
         healthText.tint = 0xff0000;
         setTimeout(function(){    

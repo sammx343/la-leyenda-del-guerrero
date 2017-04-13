@@ -52,11 +52,10 @@ function start(){
   game.load.image('capa31', 'assets/la_leyenda/nivel1/capas_piso/capa-3-sector-1.png');
   game.load.image('capa32', 'assets/la_leyenda/nivel1/capas_piso/capa-3-sector-2.png');
 
-  game.load.image('star', 'assets/star.png');
-
   game.load.spritesheet('pause_button', 'assets/la_leyenda/menu/pause_menu/pause_button.png', 75, 90);
   game.load.image('vida', 'assets/la_leyenda/menu/vida.png');
   game.load.image('oro', 'assets/la_leyenda/menu/oro.png');
+  game.load.image('sabiduria', 'assets/la_leyenda/menu/sabiduria.png');
 
   game.load.image('oro_5', 'assets/la_leyenda/objetos_mundos/oro/oro_pieza_grande.png');
   game.load.image('oro_1', 'assets/la_leyenda/objetos_mundos/oro/oro_pieza_pequeña.png');
@@ -67,11 +66,15 @@ function start(){
   game.load.spritesheet('retry_button', 'assets/la_leyenda/menu/pause_menu/retry_button.png', 118 , 131);
 
   game.load.image('pause_menu_lose', 'assets/la_leyenda/perdiste/fondo_perdiste.png');
-  game.load.spritesheet('head', 'assets/la_leyenda/perdiste/personaje/head_animation.png', 385, 353);
+  game.load.spritesheet('head', 'assets/la_leyenda/perdiste/personaje/head_animation.png', 393, 353);
   game.load.spritesheet('button_exit_lose', 'assets/la_leyenda/perdiste/button_exit_lose.png', 115, 123);
   game.load.spritesheet('button_retry_lose', 'assets/la_leyenda/perdiste/button_retry_lose.png', 315, 128);
 
-  
+  game.load.image('menu_win', 'assets/la_leyenda/Ganaste/menu_win.png');
+  game.load.spritesheet('head_win', 'assets/la_leyenda/Ganaste/personaje/head_win.png', 315, 450);
+  game.load.spritesheet('button_retry_win', 'assets/la_leyenda/Ganaste/button_retry_win.png', 127, 139);
+  game.load.spritesheet('button_continue_win', 'assets/la_leyenda/Ganaste/button_continue_win.png', 306, 139);
+
   game.load.atlasJSONHash('dude', 'assets/la_leyenda/heroe/heroe.png', 'js/atlas/heroe.json');
   game.load.spritesheet('pajaro', 'assets/la_leyenda/enemigos/pajaro_spritesheet.png', 255, 229);
   game.load.image('bala_pajaro', 'assets/la_leyenda/enemigos/bala_pajaro.png');

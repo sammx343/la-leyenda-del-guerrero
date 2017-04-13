@@ -17,10 +17,12 @@ var Splash = {
     mapuka.anchor.setTo(0.5);
     mapuka.alpha = 0;
 
-    game.camera.flash('#000000', 1500);
+    game.camera.flash('#000000', 2500);
+
+    tween(un, 4000);
+    tween(mapuka, 4000);
+
     game.camera.onFlashComplete.add(function(){
-      tween(un, 1000);
-      tween(mapuka, 1000);
       if(stopTransition == false){
         setTimeout(function(){
           scene_transition('Menu', 1500);

@@ -20,10 +20,19 @@ function game_menu_create(){
   oro.anchor.setTo(0.5);
   oro.scale.setTo(0.6);
   oro.fixedToCamera = true;
-
+  
   goldText = game.add.bitmapText(game.width/2 + oro.width/1.3, move*3 + 5 , 'myfont', '', 40);
   goldText.anchor.setTo(0.5);
   goldText.fixedToCamera = true;
+
+  sabiduria = game.add.sprite(game.width/1.2, move*3 , 'sabiduria');
+  sabiduria.anchor.setTo(0.5);
+  sabiduria.scale.setTo(0.58);
+  sabiduria.fixedToCamera = true;
+
+  sabiduriaText = game.add.bitmapText(game.width/1.08, move*3  , 'myfont', '0', 35);
+  sabiduriaText.anchor.setTo(0.5);
+  sabiduriaText.fixedToCamera = true;
 
   continue_button = createItem(game.width/2 + game.width/10 + move, game.height/2 + game.height/20, 'continue_button' , 0.5, 0.85, true, false);
 
@@ -46,6 +55,21 @@ function game_menu_create(){
   button_retry_lose.upAction = function(){game.state.start('Mundo1')};
   button_retry_lose.onInputDown.add(button_sprite_down);
   button_retry_lose.onInputUp.add(button_sprite_up);
+
+  menu_win = createItem(game.width/2, game.height/2, 'menu_win', 0.5, 0.8, true, false, 0);
+
+  head_win = createItem(game.width/4.4, game.height/2, 'head_win', 0.5, 0.8, true, false, 0);
+  head_win.animations.add('smile', [0,1,2,3,2,1], 6 , true);
+
+  button_retry_win = createItem(game.width/2 - game.width/12 + move, game.height/2 + game.height/7, 'button_retry_win', 0.5, 0.8, true, false, 0);
+  button_retry_win.upAction = function(){game.state.start('Mundo1')};
+  button_retry_win.onInputDown.add(button_sprite_down);
+  button_retry_win.onInputUp.add(button_sprite_up);
+
+  button_continue_win = createItem(game.width/2 + game.width/10 + move, game.height/2 + game.height/7, 'button_continue_win', 0.5, 0.8, true, false, 0);
+  button_continue_win.upAction = function(){game.state.start('Mapa')};
+  button_continue_win.onInputDown.add(button_sprite_down);
+  button_continue_win.onInputUp.add(button_sprite_up);
 }
 
 function createItem(x, y , key, anchor, scale, fixed, visible, alpha){

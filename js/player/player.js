@@ -3,20 +3,21 @@ var Right;
 var Jump;
 var DoubleJump;
 var Punch;
-var Side;
 var Anim;
 
 function create_player(){
   player = game.add.sprite(0, game.height - 300, 'dude');
   player.scale.setTo(0.75);
-  player.health = 100;
+  player.health = 1;
   player.alive = true;
-  player.oro = 0;
+  player.gold = 0;
   player.speed = 180;
   player.died = false;
   player.alive = true;
-  player.damage = 25;
-  Side = "Right";
+  player.damage = 10000;
+  player.Side = "Right";
+  player.win = false;
+  player.exp = 0;
 
   game.physics.arcade.enable(player);
   player.body.gravity.y = gravity;
@@ -28,25 +29,28 @@ function create_player(){
   player.animations.add('dead-right', [18,19,20,21], 8 , true);
   player.animations.add('dead-left', [22,23,24,25], 8 , true);
   player.animations.add('punch-down', [12], 10 , true);
-  player.animations.add('jump-right', [28], 6 , true);
-  player.animations.add('jump-left', [34], 6 , true);
+  player.animations.add('jump-right', [26,27,28,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29], 10 , true);
+  player.animations.add('jump-left', [32,33,34,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35], 10 , true);
+  player.animations.add('rotation-right', [26,27,28,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29], 10 , true);
+  player.animations.add('rotation-left', [32,33,34,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35], 10 , true);
   player.body.setSize(player.width-40, player.height+10, 20, 40);
 }
 
 function update_player(){
   player.body.velocity.x = 0;
-  if(player.health > 0){
+  if(player.health > 0 && player.win == false){
+      //MOVIMIENTO
       Left = cursors.left.isDown;
       Right = cursors.right.isDown;
       Jump = (cursors.up.isDown && player.body.touching.down && inGround);
       punch.isDown? (Punch = true) : 0;
 
-      if(Right){
+      if(Right && (!Punch || (Punch && player.Side == "Right"))){
         moveCondition(player.speed, "Right", -player.speed/370, -player.speed/52);
-      }else if(Left){
+      }else if(Left && (!Punch || (Punch && player.Side == "Left"))){
         moveCondition(-player.speed, "Left", player.speed/370, player.speed/52);
       }else{
-        moveCondition(0, Side, 0, 0); 
+        moveCondition(0, player.Side, 0, 0); 
       }
 
       if(!Punch){
@@ -54,10 +58,10 @@ function update_player(){
         (cursors.up.isDown && DoubleJump)? (player.body.velocity.y = -450, DoubleJump = false) : 0;
       }
 
+      //SPRITES
       if(Punch){
-        (Side == 'Left')? (player.animations.play('punch-left')) : (player.animations.play('punch-right'));
+        (player.Side == 'Left')? (player.animations.play('punch-left')) : (player.animations.play('punch-right'));
         player.events.onAnimationComplete = new Phaser.Signal();
-        console.log(Punch);
         if(player.animations.currentAnim.frame == 2 || player.animations.currentAnim.frame == 7){
           Punch = false;
           player.animations.stop(null, true);
@@ -67,16 +71,16 @@ function update_player(){
             Left? player.animations.play('walk-left') : 0;
             Right? player.animations.play('walk-right') : 0;
             if(!Left && !Right){
-              (Side == 'Left')? player.frame = 7 : player.frame = 2; 
+              (player.Side == 'Left')? player.frame = 7 : player.frame = 2; 
             }
-          
         }else{
-          (Side == 'Left')? player.animations.play('jump-left') : player.animations.play('jump-right');
+          (player.Side == 'Left')? player.animations.play('jump-left') : player.animations.play('jump-right');
         }
       }
+  }else if(player.health > 0 && player.win){
   }else{
     if(!player.died){
-      (Side == 'Left')? player.animations.play('dead-left'): player.animations.play('dead-right');
+      (player.Side == 'Left')? player.animations.play('dead-left'): player.animations.play('dead-right');
       player.died = true;
       player.alive = false;
     }
@@ -86,7 +90,7 @@ function update_player(){
 
 function moveCondition(speed, sd, fondoSpeed, platformSpeed){
   player.body.velocity.x = speed;
-  Side = sd;
+  player.Side = sd;
 
   fondoLight.forEach(function(item){
     (!game.camera.atLimit.x)? (item.tilePosition.x += fondoSpeed) : item;
