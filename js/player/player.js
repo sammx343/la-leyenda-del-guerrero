@@ -8,7 +8,7 @@ var Anim;
 function create_player(){
   player = game.add.sprite(0, game.height - 300, 'dude');
   player.scale.setTo(0.75);
-  player.health = 1;
+  player.health = 1000;
   player.alive = true;
   player.gold = 0;
   player.speed = 180;
@@ -18,6 +18,7 @@ function create_player(){
   player.Side = "Right";
   player.win = false;
   player.exp = 0;
+  player.movedX = 0;
 
   game.physics.arcade.enable(player);
   player.body.gravity.y = gravity;
@@ -33,7 +34,6 @@ function create_player(){
   player.animations.add('jump-left', [32,33,34,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35], 10 , true);
   player.animations.add('rotation-right', [26,27,28,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29], 10 , true);
   player.animations.add('rotation-left', [32,33,34,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35], 10 , true);
-  player.body.setSize(player.width-40, player.height+10, 20, 40);
 }
 
 function update_player(){
@@ -86,18 +86,22 @@ function update_player(){
     }
   }
   deathHeigthAnimation();
+  changeSize();
+  
 }
 
 function moveCondition(speed, sd, fondoSpeed, platformSpeed){
   player.body.velocity.x = speed;
   player.Side = sd;
-
-  fondoLight.forEach(function(item){
-    (!game.camera.atLimit.x)? (item.tilePosition.x += fondoSpeed) : item;
-  });
-  platforms2.forEach(function(item){
-      (!game.camera.atLimit.x)? (item.cameraOffset.x  += platformSpeed): item;
-  });
+  
+  if(player.movedX != player.body.x){
+    fondoLight.forEach(function(item){
+      (!game.camera.atLimit.x)? (item.tilePosition.x += fondoSpeed) : item;
+    });
+    platforms2.forEach(function(item){
+        (!game.camera.atLimit.x)? (item.cameraOffset.x  += platformSpeed): item;
+    });
+  }
 }
 
 function deathHeigthAnimation(){
@@ -107,5 +111,13 @@ function deathHeigthAnimation(){
   }else if(player.frame == 25){
     player.animations.stop(null, true);
     player.frame = 25;
+  }
+}
+
+function changeSize(){
+  if(player.Side == "Left"){
+    player.body.setSize(player.width-45, player.height, 60, 40);
+  }else{
+    player.body.setSize(player.width-40, player.height, 20, 40);
   }
 }

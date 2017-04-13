@@ -51,6 +51,12 @@ function start(){
   game.load.image('capa23', 'assets/la_leyenda/nivel1/capas_piso/capa-2-sector-3.png');
   game.load.image('capa31', 'assets/la_leyenda/nivel1/capas_piso/capa-3-sector-1.png');
   game.load.image('capa32', 'assets/la_leyenda/nivel1/capas_piso/capa-3-sector-2.png');
+  game.load.image('puas1', 'assets/la_leyenda/nivel1/obstaculos/puas1.png');
+  game.load.image('puas2', 'assets/la_leyenda/nivel1/obstaculos/puas2.png');
+  game.load.image('puas3', 'assets/la_leyenda/nivel1/obstaculos/puas3.png');
+  game.load.image('puas-piso', 'assets/la_leyenda/nivel1/obstaculos/puas-piso.png');
+  game.load.image('totem1', 'assets/la_leyenda/nivel1/obstaculos/totem1.png');
+  game.load.image('totem2', 'assets/la_leyenda/nivel1/obstaculos/totem2.png');
 
   game.load.spritesheet('pause_button', 'assets/la_leyenda/menu/pause_menu/pause_button.png', 75, 90);
   game.load.image('vida', 'assets/la_leyenda/menu/vida.png');

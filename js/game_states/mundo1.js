@@ -56,6 +56,7 @@ var enemies;
 var showMenuOnce;
 var enemyNumber;
 var birdsNumber;
+var obstacles;
 
 var Mundo1 = {
 
@@ -85,7 +86,7 @@ var Mundo1 = {
         platforms.enableBodyDebug = true;
         platforms.renderable = true;
         platforms.enableBody = true;
-        birdsNumber = 15;
+        birdsNumber = 4;
         for(let i=0;i<=6;i++){
             if(i%3==0){
                 ground = platforms.create(i*1280, game.world.height - 350  - tam , 'capa21');
@@ -102,10 +103,20 @@ var Mundo1 = {
             }
         }
 
-        ground.scale.setTo(1, 1);
-        ground.body.immovable = true;
 
-        create_player();
+        obstacles = game.add.group();
+        obstacles.enableBody = true;
+        obstacles.physicsBodyType = Phaser.Physics.ARCADE;
+        obstacles.enableBodyDebug = true;
+        obstacles.renderable = true;
+
+        obstacles.create(300, game.world.height - 190, 'totem1');
+        obstacles.create(1100, game.world.height - 190, 'totem2');
+
+        obstacles.forEach(function(obstacle) {
+            obstacle.body.immovable = true;
+            obstacle.body.setSize(obstacle.width-50, obstacle.height, 10, 15);
+        });
 
         monedas = game.add.group();
         monedas.enableBody = true;
@@ -114,7 +125,7 @@ var Mundo1 = {
             var moneda;
             if(i%4==0){
                 moneda = monedas.create(i * 10, 0, 'oro_5');
-                moneda.scale.setTo(0.65, 0.65);
+                moneda.scale.setTo(0.65);
                 moneda.body.acceleration.x = rnd(-100,100);
             }else{
                 moneda = monedas.create(i * 10, 0, 'oro_1');
@@ -129,11 +140,13 @@ var Mundo1 = {
         enemies = [];
 
         for (var i = 0; i < birdsNumber; i++){
-          enemies.push(new birds(100*(i+1), game.height - 500));
+          enemies.push(new birds(400*(i+1), game.height - 500));
         }
 
         platforms2 = game.add.group();
         platforms2.enableBody = true;
+
+        create_player();
 
         var min = 10;
         for(let i=0;i<=12;i++){
@@ -156,12 +169,21 @@ var Mundo1 = {
         var damaged = player.health;
         enemyNumber = 0;
 
+
         fondoJuego.tilePosition.x -= 0.1;
         game.camera.follow(player);
-        inGround = game.physics.arcade.collide(player, platforms);
-        game.physics.arcade.collide(stars, platforms);
+        //inGround = game.physics.arcade.collide(player, platforms);
+        if(game.physics.arcade.collide(player, platforms) || game.physics.arcade.collide(player, obstacles)){
+            inGround = true;
+        }else{
+            inGround = false;
+        }
 
+
+        game.physics.arcade.collide(stars, platforms);
+        game.physics.arcade.collide(player, obstacles)
         game.physics.arcade.collide(monedas, platforms, null, null, this);
+        game.physics.arcade.collide(monedas, obstacles, null, null, this);
         game.physics.arcade.overlap(monedas, player, getMonedas, null, this);
 
         // game.physics.arcade.overlap(bala.bullets, player, hitPlayer, null, this);
@@ -180,6 +202,8 @@ var Mundo1 = {
         }
 
         update_player();
+
+        player.movedX = player.body.x;
 
         if(enemyNumber<= 0 && showMenuOnce == false ){
             showWin();
@@ -212,11 +236,12 @@ var Mundo1 = {
             }
         };
         changeHealthColor(damaged);
-    console.log(player.exp );
+        
     },
 
     render: function(){
         platforms.forEachAlive(renderGroup, this);
+        obstacles.forEachAlive(renderGroup, this);
         game.debug.body(player);
         for (var i = 0; i < enemies.length; i++){
             game.debug.body(enemies[i].bird);
@@ -311,15 +336,13 @@ function getMonedas(player, moneda){
 }
 
 function changeHealthColor(damaged){
-    healthText.text = player.health;
+    if(player.health >= 0){
+       healthText.text = player.health;
+    }
     if(player.health != damaged){
         healthText.tint = 0xff0000;
         setTimeout(function(){    
           healthText.tint = 0xffffff;
         },200)  
-    }
-
-    if(player.health < 0){
-        player.health = 0;
     }
 }

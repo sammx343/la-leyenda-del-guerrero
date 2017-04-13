@@ -92,7 +92,7 @@ birds.prototype.update = function(){
 function birdFire(bird){
   if (game.time.now > bird.bala.nextFire && Math.abs(bird.x - player.x) <= 400){
       bird.bala.nextFire = game.time.now + bird.bala.fireRate;
-      bird.bala.fireAtSprite(player);
+      bird.bala.fireAtXY(player.x+40, player.y+50)
   }
 }
 

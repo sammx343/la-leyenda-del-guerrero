@@ -11,10 +11,12 @@ function showWin(){
      sabiduriaFinalText = game.add.bitmapText(game.width/2 + 10, game.height/2 - 20  , 'myfont', player.exp + "", 39);
      sabiduriaFinalText.anchor.setTo(0.5);
      sabiduriaFinalText.fixedToCamera = true;
+     sabiduriaFinalText.tint = 0x444444;
      head_win.animations.play('smile');
      finalGoldText.fixedToCamera = true;
      finalGoldText.anchor.setTo(0.5);
      finalGoldText.visible = true;
+     finalGoldText.tint = 0x444444;
   },0)
 }
 
@@ -30,9 +32,11 @@ function showLose(){
      sabiduriaFinalText = game.add.bitmapText(game.width/2 + 80, game.height/2 - 35  , 'myfont', player.exp + "", 39);
      sabiduriaFinalText.anchor.setTo(0.5);
      sabiduriaFinalText.fixedToCamera = true;
+     sabiduriaFinalText.tint = 0x444444;
      head.animations.play('negation');
      finalGoldText.fixedToCamera = true;
      finalGoldText.anchor.setTo(0.5);
      finalGoldText.visible = true;
+     finalGoldText.tint = 0x444444;
   },0)  
 }
