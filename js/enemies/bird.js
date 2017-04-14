@@ -6,8 +6,7 @@ birds = function(x,y){
   bird.scale.setTo(0.65);
   bird.anchor.setTo(0.5);
   game.physics.arcade.enable(bird);
-  bird.body.setSize(bird.width-bird.width/10, bird.height-bird.height/10, 0, 0);
-  bird.damage = 50;
+  bird.damage = 5;
   bird.minHeigth = rnd(50,150);
   bird.maxHeigth = rnd(200,250);
   bird.minWidth = rnd(50,250);
@@ -18,7 +17,7 @@ birds = function(x,y){
   bird.animations.add('fly_right', [ 4, 4, 4, 5, 5, 6, 6, 7, 7, 7 , 6 , 6 , 5 , 5], 25, true);
   bird.id = id++;
   bird.died = false;
-  bird.health = 75;
+  bird.health = 80;
   bird.bala = game.add.weapon(30,'bala_pajaro'); 
   bird.bala.bulletKillType = Phaser.Weapon.KILL_CAMERA_BOUNDS;
   bird.bala.bulletSpeed = 400;
@@ -27,6 +26,7 @@ birds = function(x,y){
   bird.bala.trackSprite(bird, -40, -10, true);
   bird.punchable = true;
   bird.exp = 30;
+  bird.body.setSize(bird.width-bird.width/10, bird.height-bird.height/10, 40, 40);
   this.bird = bird;
 }
 

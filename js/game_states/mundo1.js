@@ -57,6 +57,7 @@ var showMenuOnce;
 var enemyNumber;
 var birdsNumber;
 var obstacles;
+var traps;
 
 var Mundo1 = {
 
@@ -70,7 +71,7 @@ var Mundo1 = {
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.camera.flash('#000000', 500, true);
-        game.world.setBounds(0, 0, 2500, 500);
+        game.world.setBounds(0, 0, 4500, 500);
 
         fondoJuego = game.add.tileSprite(0, -10, game.world.width, game.world.height, 'sky');
         fondoJuego.fixedToCamera = true;
@@ -86,7 +87,7 @@ var Mundo1 = {
         platforms.enableBodyDebug = true;
         platforms.renderable = true;
         platforms.enableBody = true;
-        birdsNumber = 4;
+
         for(let i=0;i<=6;i++){
             if(i%3==0){
                 ground = platforms.create(i*1280, game.world.height - 350  - tam , 'capa21');
@@ -112,10 +113,27 @@ var Mundo1 = {
 
         obstacles.create(300, game.world.height - 190, 'totem1');
         obstacles.create(1100, game.world.height - 190, 'totem2');
+        obstacles.create(2100, game.world.height - 190, 'totem2');
 
         obstacles.forEach(function(obstacle) {
             obstacle.body.immovable = true;
             obstacle.body.setSize(obstacle.width-50, obstacle.height, 10, 15);
+        });
+
+        traps = game.add.group();
+        traps.enableBody = true;
+        traps.physicsBodyType = Phaser.Physics.ARCADE;
+        traps.enableBodyDebug = true;
+        traps.renderable = true;
+
+        
+        traps.create(1500, game.world.height - 60, 'puas-piso');
+        traps.create(2300, game.world.height - 60, 'puas-piso');
+        traps.create(3000, game.world.height - 60, 'puas-piso');
+
+        traps.forEach(function(trap) {
+            trap.body.immovable = true;
+            trap.body.setSize(trap.width-50, trap.height, 10, 15);
         });
 
         monedas = game.add.group();
@@ -137,16 +155,17 @@ var Mundo1 = {
             moneda.body.bounce.y = 0.8 + Math.random() * 0.2;
         }
 
+        birdsNumber = 8;
         enemies = [];
 
         for (var i = 0; i < birdsNumber; i++){
-          enemies.push(new birds(400*(i+1), game.height - 500));
+          enemies.push(new birds(500*(i+1), game.height - 500));
         }
+
+        create_player();
 
         platforms2 = game.add.group();
         platforms2.enableBody = true;
-
-        create_player();
 
         var min = 10;
         for(let i=0;i<=12;i++){
@@ -173,15 +192,16 @@ var Mundo1 = {
         fondoJuego.tilePosition.x -= 0.1;
         game.camera.follow(player);
         //inGround = game.physics.arcade.collide(player, platforms);
-        if(game.physics.arcade.collide(player, platforms) || game.physics.arcade.collide(player, obstacles)){
+        if((game.physics.arcade.collide(player, platforms) || game.physics.arcade.collide(player, obstacles) ) && player.body.touching.down){
             inGround = true;
         }else{
             inGround = false;
         }
 
-
         game.physics.arcade.collide(stars, platforms);
-        game.physics.arcade.collide(player, obstacles)
+        game.physics.arcade.collide(player, obstacles);
+        game.physics.arcade.collide(player, traps, collideTraps, null, this);
+        
         game.physics.arcade.collide(monedas, platforms, null, null, this);
         game.physics.arcade.collide(monedas, obstacles, null, null, this);
         game.physics.arcade.overlap(monedas, player, getMonedas, null, this);
@@ -240,12 +260,12 @@ var Mundo1 = {
     },
 
     render: function(){
-        platforms.forEachAlive(renderGroup, this);
-        obstacles.forEachAlive(renderGroup, this);
-        game.debug.body(player);
-        for (var i = 0; i < enemies.length; i++){
-            game.debug.body(enemies[i].bird);
-        }
+        // platforms.forEachAlive(renderGroup, this);
+        // obstacles.forEachAlive(renderGroup, this);
+        // game.debug.body(player);
+        // for (var i = 0; i < enemies.length; i++){
+        //     game.debug.body(enemies[i].bird);
+        // }
     },
 
     pause : function(){
@@ -263,6 +283,18 @@ var Mundo1 = {
 
 function touchingEnemy(player, enemy){
     //console.log(enemy.key);
+}
+
+function collideTraps(){
+    if(player.punchable && player.body.touching.down){
+        inGround = true;
+        player.health -= 5;
+        player.punchable = false;
+        damageText(player, "5");
+        setTimeout(function(){    
+          player.punchable = true;
+        },2000);
+    }
 }
 
 function renderGroup(member) {

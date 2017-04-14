@@ -17,7 +17,7 @@ function showWin(){
      finalGoldText.anchor.setTo(0.5);
      finalGoldText.visible = true;
      finalGoldText.tint = 0x444444;
-  },0)
+  },2000)
 }
 
 function showLose(){
@@ -38,5 +38,5 @@ function showLose(){
      finalGoldText.anchor.setTo(0.5);
      finalGoldText.visible = true;
      finalGoldText.tint = 0x444444;
-  },0)  
+  },2000)  
 }

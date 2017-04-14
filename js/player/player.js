@@ -8,17 +8,18 @@ var Anim;
 function create_player(){
   player = game.add.sprite(0, game.height - 300, 'dude');
   player.scale.setTo(0.75);
-  player.health = 1000;
+  player.health = 100;
   player.alive = true;
   player.gold = 0;
   player.speed = 180;
   player.died = false;
   player.alive = true;
-  player.damage = 10000;
+  player.damage = 20;
   player.Side = "Right";
   player.win = false;
   player.exp = 0;
   player.movedX = 0;
+  player.punchable = true;
 
   game.physics.arcade.enable(player);
   player.body.gravity.y = gravity;
@@ -30,8 +31,10 @@ function create_player(){
   player.animations.add('dead-right', [18,19,20,21], 8 , true);
   player.animations.add('dead-left', [22,23,24,25], 8 , true);
   player.animations.add('punch-down', [12], 10 , true);
-  player.animations.add('jump-right', [26,27,28,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29], 10 , true);
-  player.animations.add('jump-left', [32,33,34,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35], 10 , true);
+  player.animations.add('jump-right', [26,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27], 8 , true);
+  player.animations.add('jump-left', [32,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33], 8 , true);
+  // player.animations.add('jump-right', [26,27,28,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29], 10 , true);
+  // player.animations.add('jump-left', [32,33,34,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35], 10 , true);
   player.animations.add('rotation-right', [26,27,28,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29], 10 , true);
   player.animations.add('rotation-left', [32,33,34,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35], 10 , true);
 }
@@ -93,7 +96,7 @@ function update_player(){
 function moveCondition(speed, sd, fondoSpeed, platformSpeed){
   player.body.velocity.x = speed;
   player.Side = sd;
-  
+
   if(player.movedX != player.body.x){
     fondoLight.forEach(function(item){
       (!game.camera.atLimit.x)? (item.tilePosition.x += fondoSpeed) : item;
@@ -115,9 +118,18 @@ function deathHeigthAnimation(){
 }
 
 function changeSize(){
-  if(player.Side == "Left"){
-    player.body.setSize(player.width-45, player.height, 60, 40);
+  if(Punch){
+    if(player.Side == "Left"){
+      player.body.setSize(player.width-20, player.height, 0, 40);
+    }else{
+      player.body.setSize(player.width, player.height, 20, 40);
+    }
   }else{
-    player.body.setSize(player.width-40, player.height, 20, 40);
+    if(player.Side == "Left"){
+      player.body.setSize(player.width-45, player.height, 60, 40);
+    }else{
+      player.body.setSize(player.width-40, player.height, 20, 40);
+    }
   }
+  
 }
