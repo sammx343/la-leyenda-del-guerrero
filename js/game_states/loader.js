@@ -22,6 +22,9 @@ var Loader = {
 };
 
 function start(){
+  //SOUNDS
+  game.load.audio('music1', 'assets/la_leyenda/Sounds/malibu_loop1.mp3');
+
   //LOADER LOADER
   game.load.image('uninorte', 'assets/la_leyenda/loader/uninorte_logo.png');
   game.load.image('mapuka', 'assets/la_leyenda/loader/malibu-proyecto.png');
@@ -36,6 +39,8 @@ function start(){
   game.load.image('selector', 'assets/la_leyenda/mapa/selector.png');
   game.load.spritesheet('jugar_buttons', 'assets/la_leyenda/mapa/jugar_buttons.png', 212 , 78);
   game.load.spritesheet('nivel_1', 'assets/la_leyenda/mapa/nivel_1.png', 97 , 92);
+  game.load.spritesheet('nivel_2', 'assets/la_leyenda/mapa/nivel_2.png', 97 , 92);
+  game.load.spritesheet('nivel_3', 'assets/la_leyenda/mapa/nivel_3.png', 97 , 92);
 
   //TRANSITION_SCENE LOADER
   game.load.image('panel', 'assets/la_leyenda/transition/panel.png');

@@ -1,5 +1,9 @@
 var game = new Phaser.Game(980, 600, Phaser.CANVAS, 'bloque_juego');
 
+game.global = {
+  level : 1
+}
+
 game.state.add('Loader', Loader);
 game.state.add('Splash', Splash);
 game.state.add('Menu', Menu);

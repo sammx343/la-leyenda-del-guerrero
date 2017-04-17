@@ -23,5 +23,5 @@ function damageText(hitted, damage){
   txtdamage.tint = 0xFF0000;
   setTimeout(function(){    
     hitted.punchable = true;
-  },500);
+  },hitted.backToDamage);
 }

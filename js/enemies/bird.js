@@ -20,6 +20,7 @@ birds = function(x,y){
   bird.health = 80;
   bird.bala = game.add.weapon(30,'bala_pajaro'); 
   bird.bala.bulletKillType = Phaser.Weapon.KILL_CAMERA_BOUNDS;
+  bird.backToDamage = 500;
   bird.bala.bulletSpeed = 400;
   bird.bala.nextFire = 0;
   bird.bala.fireRate = 3000;
@@ -35,8 +36,9 @@ birds.prototype.update = function(){
 
   let frame;
 
-  if(bird.health <= 0){
+  if(bird.health <= 0 && bird.died == false){
     bird.died = true;
+    bird.body.velocity.y = -300;
   }
 
   if(bird.died == false){
@@ -82,7 +84,7 @@ birds.prototype.update = function(){
     game.physics.arcade.overlap(platforms, bird,  birdTouchesGround, null, this);
 
   }else{
-    let birdTween = game.add.tween(bird).to( { alpha: 0 }, 200, Phaser.Easing.Linear.None, true, 0, 0, false);
+    let birdTween = game.add.tween(bird).to( { alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
     bird.frame = frame;
     bird.animations.stop(null, true);
     bird.body.gravity.y = gravity-200;

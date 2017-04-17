@@ -47,7 +47,6 @@ var fondoJuego;
 var jumped = false;
 var doubleJumped = false;
 var cont = 0;
-var punch;
 var isPunching = false;
 var isRunning = false;
 var inGround = true;
@@ -117,7 +116,7 @@ var Mundo1 = {
 
         obstacles.forEach(function(obstacle) {
             obstacle.body.immovable = true;
-            obstacle.body.setSize(obstacle.width-50, obstacle.height, 10, 15);
+            obstacle.body.setSize(obstacle.width-60, obstacle.height, 15, 15);
         });
 
         traps = game.add.group();
@@ -125,7 +124,6 @@ var Mundo1 = {
         traps.physicsBodyType = Phaser.Physics.ARCADE;
         traps.enableBodyDebug = true;
         traps.renderable = true;
-
         
         traps.create(1500, game.world.height - 60, 'puas-piso');
         traps.create(2300, game.world.height - 60, 'puas-piso');
@@ -178,9 +176,6 @@ var Mundo1 = {
             piso2.fixedToCamera = true;
         }
 
-        cursors = game.input.keyboard.createCursorKeys();
-        punch = game.input.keyboard.addKey(Phaser.Keyboard.C);
-
         game_menu_create();
     },
 
@@ -188,18 +183,17 @@ var Mundo1 = {
         var damaged = player.health;
         enemyNumber = 0;
 
-
         fondoJuego.tilePosition.x -= 0.1;
         game.camera.follow(player);
         //inGround = game.physics.arcade.collide(player, platforms);
-        if((game.physics.arcade.collide(player, platforms) || game.physics.arcade.collide(player, obstacles) ) && player.body.touching.down){
+        if((game.physics.arcade.collide(player, platforms) || game.physics.arcade.collide(player, obstacles)) && player.body.touching.down){
             inGround = true;
         }else{
             inGround = false;
         }
 
         game.physics.arcade.collide(stars, platforms);
-        game.physics.arcade.collide(player, obstacles);
+        game.physics.arcade.collide(player, obstacles, null, null,this);
         game.physics.arcade.collide(player, traps, collideTraps, null, this);
         
         game.physics.arcade.collide(monedas, platforms, null, null, this);
@@ -222,8 +216,6 @@ var Mundo1 = {
         }
 
         update_player();
-
-        player.movedX = player.body.x;
 
         if(enemyNumber<= 0 && showMenuOnce == false ){
             showWin();
@@ -255,8 +247,17 @@ var Mundo1 = {
                 }
             }
         };
-        changeHealthColor(damaged);
-        
+
+        if(player.Side == "Right"  && player.movedX != player.body.x && (Left || Right)){
+          move_parallax(-player.speed/350, -player.speed/52);
+        }else if(player.Side == "Left" && player.movedX != player.body.x && (Left || Right)){
+          move_parallax(player.speed/350, player.speed/52);
+        }else{
+          move_parallax(0, 0); 
+        }
+        changeHealthColor(damaged);   
+
+        player.movedX = player.body.x;
     },
 
     render: function(){
@@ -286,19 +287,26 @@ function touchingEnemy(player, enemy){
 }
 
 function collideTraps(){
+    console.log(player.punchable);
     if(player.punchable && player.body.touching.down){
         inGround = true;
         player.health -= 5;
         player.punchable = false;
         damageText(player, "5");
-        setTimeout(function(){    
-          player.punchable = true;
-        },2000);
     }
 }
 
 function renderGroup(member) {
     game.debug.body(member);
+}
+
+function move_parallax(fondoSpeed, platformSpeed){
+  fondoLight.forEach(function(item){
+    (!game.camera.atLimit.x)? (item.tilePosition.x += fondoSpeed) : item;
+  });
+  platforms2.forEach(function(item){
+      (!game.camera.atLimit.x)? (item.cameraOffset.x  += platformSpeed): item;
+  });
 }
 
 function pressed_buttons(event){

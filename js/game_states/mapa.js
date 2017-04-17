@@ -3,9 +3,10 @@ var nivel_1;
 var selector;
 var my_game;
 var button_group;
-var tween;
 var tweenBack;
 var toggle;
+var shouldLevel;
+
 var Mapa = {
 
   
@@ -14,21 +15,32 @@ var Mapa = {
 
   create : function(){
     var map = game.add.image(0, 0 , 'mapa');
-    map.scale.setTo(0.67, 0.67);
+    map.scale.setTo(0.67);
     toggle = false;
-    jugar_buttons = game.add.button(game.width-150, game.height-100, 'jugar_buttons', null, Mapa);
-    jugar_buttons.anchor.setTo(0.5,0.5);
+
+    jugar_buttons = createItem(game.width-130, game.height-50,'jugar_buttons', 0.5, 1, true, true, 0.3);
+    jugar_buttons.frame = 1;
     jugar_buttons.onInputDown.add(frame, this, 0);
     jugar_buttons.onInputUp.add(play);
-    jugar_buttons.frame = 1;
-    jugar_buttons.alpha = 0.3;
 
-    nivel_1 = game.add.button(game.width/2-100, game.height/2, 'nivel_1', null, this);
+    nivel_1 = createItem(game.width/2-50, game.height/2-70, 'nivel_1', 0.5, 0.7, true, true, 0.3);
     nivel_1.events.onInputUp.add(addSelector);
-    nivel_1.scale.setTo(0.7,0.7);
-    nivel_1.anchor.setTo(0.5,0.5);
     nivel_1.frame = 1;
-    nivel_1.alpha = 0.3;
+    nivel_1.level = 1;
+
+    nivel_2 = createItem(game.width/2+50, game.height/2-30, 'nivel_2', 0.5, 0.7, true, true, 0.3);
+    nivel_2.events.onInputUp.add(addSelector);
+    nivel_2.frame = 1;
+    nivel_2.level = 2;
+
+    nivel_3 = createItem(game.width/2+80, game.height/2+80, 'nivel_3', 0.5, 0.7, true, true, 0.3);
+    nivel_3.events.onInputUp.add(addSelector);
+    nivel_3.frame = 1;
+    nivel_3.level = 3;
+
+    if(game.global.level == 1){
+      tweenBack = game.add.tween(nivel_1).to( { alpha: 1 }, 600, Phaser.Easing.Linear.None, true, 1000, -1, true);
+    }
 
     selector = game.add.image(100, 100 , 'selector');
     selector.anchor.setTo(0.5,0.5);
@@ -38,29 +50,41 @@ var Mapa = {
   },
 
   update: function(){
-
   }
 }
 
 function addSelector(button){
-  console.log("message");
+  shouldLevel = button.level;
   if(toggle == false){
     toggle = true;
     selector.visible = true;
-    selector.x = nivel_1.x;
-    selector.y = nivel_1.y;
-    game.add.tween(jugar_buttons).to( { alpha: 1.2 }, 350, Phaser.Easing.Linear.None, true, 0, 0, false);
-    game.add.tween(button).to( { alpha: 1.2 }, 350, Phaser.Easing.Linear.None, true, 0, 0, false);
+    selector.x = button.x;
+    selector.y = button.y;
+    if(shouldLevel == game.global.level){
+      game.add.tween(jugar_buttons).to( { alpha: 1 }, 350, Phaser.Easing.Linear.None, true, 0, 0, false);  
+    }
+    game.add.tween(button).to( { alpha: 1 }, 350, Phaser.Easing.Linear.None, true, 0, 0, false);
+    if(tweenBack != null && button.level == game.global.level){
+      tweenBack.pause();
+    }
   }else{
     toggle = false;
     selector.visible = false;
-    game.add.tween(jugar_buttons).to( { alpha: 0.3 }, 350, Phaser.Easing.Linear.None, true, 0, 0, false);
-    game.add.tween(button).to( { alpha: 0.3 }, 350, Phaser.Easing.Linear.None, true, 0, 0, false);
+    if(shouldLevel <= game.global.level){
+      game.add.tween(jugar_buttons).to( { alpha: 0.3 }, 350, Phaser.Easing.Linear.None, true, 0, 0, false);   
+    }
+    var mytween = game.add.tween(button).to( { alpha: 0.3 }, 350, Phaser.Easing.Linear.None, true, 0, 0, false);
+    mytween.onComplete.add(function(){
+      if(tweenBack != null){
+        tweenBack.resume();
+        tweenBack.repeat();
+      }
+    }, this);
   }
 }
 
-function play(){
-  if(selector.visible){
+function play(button){
+  if(selector.visible && shouldLevel == game.global.level){
     scene_transition('Transition');
   }
 }
