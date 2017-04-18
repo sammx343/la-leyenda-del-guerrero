@@ -91,7 +91,7 @@ function addSelector(button){
 }
 
 function play(button){
-  if(selector.visible && shouldLevel == game.global.level){
+  if(selector.visible && shouldLevel <= game.global.level){
     scene_transition('Transition');
   }
 }
