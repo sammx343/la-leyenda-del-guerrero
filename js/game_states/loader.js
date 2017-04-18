@@ -102,6 +102,6 @@ function fileComplete(progress, cacheKey, success, totalLoaded, totalFiles) {
   loadText.setText( progress + "%");
 }
 
-function loadComplete() {
-  scene_transition('Mundo1', 50);
+function loadComplete(){
+  scene_transition('Mapa', 50);
 }

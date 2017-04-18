@@ -153,7 +153,7 @@ var Mundo1 = {
             moneda.body.bounce.y = 0.8 + Math.random() * 0.2;
         }
 
-        birdsNumber = 8;
+        birdsNumber = 0;
         enemies = [];
 
         for (var i = 0; i < birdsNumber; i++){
@@ -175,7 +175,6 @@ var Mundo1 = {
             }
             piso2.fixedToCamera = true;
         }
-
         game_menu_create();
     },
 
@@ -248,9 +247,9 @@ var Mundo1 = {
             }
         };
 
-        if(player.Side == "Right"  && player.movedX != player.body.x && (Left || Right)){
+        if(Right && player.movedX != player.body.x){
           move_parallax(-player.speed/350, -player.speed/52);
-        }else if(player.Side == "Left" && player.movedX != player.body.x && (Left || Right)){
+        }else if(Left && player.movedX != player.body.x){
           move_parallax(player.speed/350, player.speed/52);
         }else{
           move_parallax(0, 0); 

@@ -32,8 +32,8 @@ function create_player(){
   player.body.collideWorldBounds = true;
   player.animations.add('walk-right', [0,1,2,3,2,1], 10, true);
   player.animations.add('walk-left', [5,6,7,8,7,6], 10 , true);
-  player.animations.add('punch-right', [10,11,12,13,13,2], 8 , true);
-  player.animations.add('punch-left', [14,15,16,17,17,7], 8 , true);
+  player.animations.add('punch-right', [10,11,12,13,13,2], 9 , true);
+  player.animations.add('punch-left', [14,15,16,17,17,7], 9 , true);
   player.animations.add('dead-right', [18,19,20,21], 8 , true);
   player.animations.add('dead-left', [22,23,24,25], 8 , true);
   player.animations.add('punch-down', [12], 10 , true);

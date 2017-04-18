@@ -2,6 +2,7 @@ function showWin(){
   showMenuOnce = true
   finalGoldText = game.add.bitmapText(game.width/2 + 160, game.height/2 - 20 , 'myfont', player.gold + "", 39);
   finalGoldText.visible = false;
+  game.global.level++;
   setTimeout(function(){
      player.win = true;    
      tween(menu_win, 1000);
