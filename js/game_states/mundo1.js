@@ -52,11 +52,13 @@ var isRunning = false;
 var inGround = true;
 
 var enemies;
+var tigrillos;
 var showMenuOnce;
 var enemyNumber;
 var birdsNumber;
 var obstacles;
 var traps;
+var music2;
 
 var Mundo1 = {
 
@@ -67,6 +69,20 @@ var Mundo1 = {
     create: function(){
         var tam = -100;
         showMenuOnce = false;
+
+        // music.removeMarker("music1")
+        // music.stop();
+
+        // music2 = game.add.audio('music2',0.2,true);
+
+        // console.log(music2);
+
+        // if(music2.isPlaying){
+        //  console.log("entra aqui alguna hpta vez");
+        //  music2.stop();
+        // }else{
+        //  music2.play();
+        // }
 
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.camera.flash('#000000', 500, true);
@@ -153,12 +169,15 @@ var Mundo1 = {
             moneda.body.bounce.y = 0.8 + Math.random() * 0.2;
         }
 
-        birdsNumber = 0;
+        birdsNumber = 5;
         enemies = [];
 
         for (var i = 0; i < birdsNumber; i++){
-          enemies.push(new birds(500*(i+1), game.height - 500));
+          enemies.push(new birds(500*(i+1)+1500, game.height - 500));
         }
+
+        tigrillos = [];
+        tigrillos.push(new trgs(600, game.height - 200));
 
         create_player();
 
@@ -211,7 +230,15 @@ var Mundo1 = {
             game.physics.arcade.overlap(enemies[i].bird, player, hitEnemy, null, this);
             if(enemies[i].bird.died == false){
                 enemyNumber++;
-            }
+            }          
+        }
+
+        for (var i = 0; i < tigrillos.length; i++){
+            tigrillos[i].update();
+            game.physics.arcade.overlap(tigrillos[i].tigrillo, player, hitEnemy, null, this);
+            if(tigrillos[i].tigrillo.died == false){
+                enemyNumber++;
+            }          
         }
 
         update_player();
@@ -325,7 +352,7 @@ function released_buttons(event){
             game.state.start('Mundo1');
             unpause();
         }else if(clicked(event, exit_button, 0)){
-            game.state.start('Menu');
+            game.state.start('Mapa');
             unpause();
         }else if(clicked(event, pause_button, 0)){
             unpause();

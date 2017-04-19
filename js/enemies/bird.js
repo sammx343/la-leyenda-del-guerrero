@@ -2,6 +2,7 @@
 var id = 0;
 
 birds = function(x,y){
+  this.name = "bird";
   bird = game.add.sprite(x, y, 'pajaro');
   bird.scale.setTo(0.65);
   bird.anchor.setTo(0.5);

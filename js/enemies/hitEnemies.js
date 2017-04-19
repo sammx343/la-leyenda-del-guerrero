@@ -19,7 +19,7 @@ function damageText(hitted, damage){
   }else{
     txtdamage = game.add.bitmapText(hitted.x + hitted.width/2 , hitted.y, 'myfont', "-" + damage, 15);
   }
-  game.add.tween(txtdamage).to( { alpha: 0 }, 800, Phaser.Easing.Linear.None, true, 0, 0, false);
+  game.add.tween(txtdamage).to( { alpha: 0 }, 1400, Phaser.Easing.Linear.None, true, 0, 0, false);
   txtdamage.tint = 0xFF0000;
   setTimeout(function(){    
     hitted.punchable = true;

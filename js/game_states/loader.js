@@ -24,6 +24,7 @@ var Loader = {
 function start(){
   //SOUNDS
   game.load.audio('music1', 'assets/la_leyenda/Sounds/malibu_loop1.mp3');
+  game.load.audio('music2', 'assets/la_leyenda/Sounds/malibu_loop2.mp3');
 
   //LOADER LOADER
   game.load.image('uninorte', 'assets/la_leyenda/loader/uninorte_logo.png');
@@ -87,6 +88,7 @@ function start(){
   game.load.spritesheet('button_continue_win', 'assets/la_leyenda/Ganaste/button_continue_win.png', 306, 139);
 
   game.load.atlasJSONHash('dude', 'assets/la_leyenda/heroe/heroe.png', 'js/atlas/heroe.json');
+  game.load.atlasJSONHash('tigrillo1', 'assets/la_leyenda/enemigos/tigrillo1.png', 'js/atlas/tigrillo1.json');
   game.load.spritesheet('pajaro', 'assets/la_leyenda/enemigos/pajaro_spritesheet.png', 255, 229);
   game.load.image('bala_pajaro', 'assets/la_leyenda/enemigos/bala_pajaro.png');
 
@@ -103,5 +105,5 @@ function fileComplete(progress, cacheKey, success, totalLoaded, totalFiles) {
 }
 
 function loadComplete(){
-  scene_transition('Mapa', 50);
+  scene_transition('Splash', 50);
 }

@@ -13,7 +13,6 @@ var Menu = {
 
   create : function(){
     music = game.add.audio('music1',0.2,true);
-    music.loop = true;
     music.play();
 
     fondo = game.add.tileSprite(0, 0, 1480, 920, 'fondo');
@@ -45,7 +44,7 @@ var Menu = {
       // game.add.tween(titulo).to( { alpha: 1 }, 1000, Phaser.Easing.Linear.None, true, 1000, -1, true);
       game.add.tween(titulo).to( { alpha: 1 }, 1500, Phaser.Easing.Linear.None, true, 0, 0, false);
       game.add.tween(jugarButton).to( { alpha: 1 }, 1500, Phaser.Easing.Linear.None, true, 0, 0, false);
-      game.add.tween(platform).to( { alpha: 1 }, 1500, Phaser.Easing.Linear.None, true, 1000, 0, false);
+      game.add.tween(platform).to( { alpha: 1 }, 1500, Phaser.Easing.Linear.None, true, 700, 0, false);
     }, game);
   },
 

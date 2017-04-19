@@ -10,7 +10,7 @@ var punch;
 function create_player(){
   player = game.add.sprite(0, game.height - 300, 'dude');
   player.scale.setTo(0.75);
-  player.health = 10000;
+  player.health = 100;
   player.alive = true;
   player.gold = 0;
   player.speed = 180;
@@ -32,8 +32,8 @@ function create_player(){
   player.body.collideWorldBounds = true;
   player.animations.add('walk-right', [0,1,2,3,2,1], 10, true);
   player.animations.add('walk-left', [5,6,7,8,7,6], 10 , true);
-  player.animations.add('punch-right', [10,11,12,13,13,2], 9 , true);
-  player.animations.add('punch-left', [14,15,16,17,17,7], 9 , true);
+  player.animations.add('punch-right', [10,11,12,13,13,2], 10 , true);
+  player.animations.add('punch-left', [14,15,16,17,17,7], 10 , true);
   player.animations.add('dead-right', [18,19,20,21], 8 , true);
   player.animations.add('dead-left', [22,23,24,25], 8 , true);
   player.animations.add('punch-down', [12], 10 , true);
@@ -117,7 +117,7 @@ function update_player(){
               (player.Side == 'Left')? player.frame = 7 : player.frame = 2; 
             }
         }else{
-          console.log("entra en el salto mk " + player.animations.currentAnim.frame + " " + player.frame);
+          // console.log("entra en el salto mk " + player.animations.currentAnim.frame + " " + player.frame);
           if(player.Side == 'Left'){
             player.animations.play('jump-left') 
           }else{
