@@ -105,5 +105,5 @@ function fileComplete(progress, cacheKey, success, totalLoaded, totalFiles) {
 }
 
 function loadComplete(){
-  scene_transition('Splash', 50);
+  scene_transition('Mundo1', 50);
 }

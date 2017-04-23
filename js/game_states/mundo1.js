@@ -289,7 +289,7 @@ var Mundo1 = {
     render: function(){
         // platforms.forEachAlive(renderGroup, this);
         // obstacles.forEachAlive(renderGroup, this);
-        // game.debug.body(player);
+        game.debug.body(player);
         // for (var i = 0; i < enemies.length; i++){
         //     game.debug.body(enemies[i].bird);
         // }

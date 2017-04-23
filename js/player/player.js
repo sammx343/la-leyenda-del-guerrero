@@ -1,8 +1,8 @@
 var Left;
 var Right;
 var Jump;
-var DoubleJump;
-var Punch;
+var DoubleJump = false;
+var Punch = false;
 var Anim;
 var jumpKey;
 var punch;
@@ -22,6 +22,10 @@ function create_player(){
   player.movedX = 0;
   player.punchable = true;
   player.backToDamage = 500;
+  player.doubleJumping = false;
+  player.jumpVelocity = -550; 
+  player.doubleJumpVelocity = -500;
+  // player.anchor.setTo(0.5);
 
   cursors = game.input.keyboard.createCursorKeys();
   punch = game.input.keyboard.addKey(Phaser.Keyboard.C);
@@ -39,10 +43,12 @@ function create_player(){
   player.animations.add('punch-down', [12], 10 , true);
   player.animations.add('jump-right', [26,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27], 8 , true);
   player.animations.add('jump-left', [32,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33], 8 , true);
-  // player.animations.add('jump-right', [26,27,28,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29], 10 , true);
-  // player.animations.add('jump-left', [32,33,34,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35], 10 , true);
-  player.animations.add('rotation-right', [26,27,28,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29,29], 10 , true);
-  player.animations.add('rotation-left', [32,33,34,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35], 10 , true);
+  player.animations.add('rotation-right', [38,39,40,41], 8 , true);
+  player.animations.add('rotation-left', [42,43,44,45], 8 , true);
+  player.body.setSize(player.body.sourceWidth-35, player.body.sourceHeight-40, 15, 40);
+
+  player.w = player.body.sourceWidth;
+  player.h = player.body.sourceHeight;
 }
 
 function update_player(){
@@ -54,47 +60,17 @@ function update_player(){
       Jump = (jumpKey.isDown && player.body.touching.down && inGround);
       punch.isDown? (Punch = true) : null;
 
-      // if(Right && (!Punch || (Punch && player.Side == "Right"))){
-      //   movePlayerX(player.speed, "Right");
-      // }else if(Left && (!Punch || (Punch && player.Side == "Left"))){
-      //   movePlayerX(-player.speed, "Left");
-      // }else{
-      //   movePlayerX(0, player.Side); 
-      // }
-
       if(Right){
         movePlayerX(player.speed, "Right");
       }else if(Left){
         movePlayerX(-player.speed, "Left");
       }else{
         movePlayerX(0, player.Side); 
-      }
-
-      // if(Right){
-      //   player.body.velocity.x = player.speed;
-      // }else if(Left){
-      //   player.body.velocity.x = -player.speed;
-      // }else{
-      //   player.body.velocity.x = 0;
-      // }
-
-      // if(Punch){
-      //   if(Right && player.Side == "Left" ){
-      //     player.Side = "Right";
-      //   }else if(Right && player.Side == "Right" ){
-      //     player.Side = "Left";
-      //   }
-      // }else{
-      //   if(Right){
-      //     player.Side = "Right";
-      //   }else if(Left){
-      //     player.Side = "Left";
-      //   }
-      // }      
+      }  
 
       if(!Punch){
-        Jump? (player.body.velocity.y = -500, jumpKey.isDown = false, DoubleJump = true) : null;
-        (jumpKey.isDown && DoubleJump)? (player.body.velocity.y = -450, DoubleJump = false) : null;
+        Jump? (player.body.velocity.y = player.jumpVelocity, jumpKey.isDown = false) : null;
+        (jumpKey.isDown && DoubleJump == false)? (player.body.velocity.y = player.doubleJumpVelocity, DoubleJump = true) : null;
       }
 
       //SPRITES
@@ -109,6 +85,7 @@ function update_player(){
           Punch = false;
           player.animations.stop(null, true);
         }
+        jumpKey.isDown = false;
       }else{
         if(inGround){
             Left? player.animations.play('walk-left') : null;
@@ -116,13 +93,22 @@ function update_player(){
             if(!Left && !Right){
               (player.Side == 'Left')? player.frame = 7 : player.frame = 2; 
             }
+            DoubleJump = false;
         }else{
           // console.log("entra en el salto mk " + player.animations.currentAnim.frame + " " + player.frame);
-          if(player.Side == 'Left'){
-            player.animations.play('jump-left') 
+          if(DoubleJump){
+            if(player.Side == 'Left'){
+              player.animations.play('rotation-left') 
+            }else{
+              player.animations.play('rotation-right');
+            } 
           }else{
-            player.animations.play('jump-right');
-          } 
+            if(player.Side == 'Left'){
+              player.animations.play('jump-left') 
+            }else{
+              player.animations.play('jump-right');
+            } 
+          }
         }
       }
   }else if(player.health > 0 && player.win){
@@ -134,7 +120,6 @@ function update_player(){
     }
   }
   deathHeigthAnimation();
-  changeSize();
 }
 
 function movePlayerX(speed, sd){
@@ -151,21 +136,5 @@ function deathHeigthAnimation(){
   }else if(player.frame == 25){
     player.animations.stop(null, true);
     player.frame = 25;
-  }
-}
-
-function changeSize(){
-  if(Punch){
-    if(player.Side == "Left"){
-      player.body.setSize(player.width-20, player.height, 0, 40);
-    }else{
-      player.body.setSize(player.width, player.height, 20, 40);
-    }
-  }else{
-    if(player.Side == "Left"){
-      player.body.setSize(player.width-45, player.height, 60, 40);
-    }else{
-      player.body.setSize(player.width-50, player.height, 20, 40);
-    }
   }
 }
