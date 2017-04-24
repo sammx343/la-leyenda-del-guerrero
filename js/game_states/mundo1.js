@@ -1,64 +1,6 @@
-var player;
 
-var pajaro;
-var bala;
 
-var platforms;
-var platforms2;
-var fondoLight;
-var cursors;
-var ground;
 
-//MENU DE PAUSA
-var vida;
-var oro;
-var sabiduria;
-var sabiduriaText;
-var continue_button;
-var pause_button;
-var retry_button;
-var exit_button;
-
-var pause_p;
-
-//MENU DE DERROTA
-var pause_menu_lose;
-var head;
-var button_exit_lose;
-var button_retry_lose;
-
-//MENU DE VICTORIA
-
-var menu_win;
-var head_win;
-var button_retry_win;
-var button_continue_win;
-
-var stars;
-var score = 0;
-var scoreText;
-var healthText;
-var goldText;
-var finalGoldText;
-
-var gravity = 850;
-
-var fondoJuego;
-var jumped = false;
-var doubleJumped = false;
-var cont = 0;
-var isPunching = false;
-var isRunning = false;
-var inGround = true;
-
-var enemies;
-var tigrillos;
-var showMenuOnce;
-var enemyNumber;
-var birdsNumber;
-var obstacles;
-var traps;
-var music2;
 
 var Mundo1 = {
 
@@ -261,15 +203,6 @@ var Mundo1 = {
                     Mundo1.pause();
                 }else{
                     unpause();
-                }
-            }
-            if(e.keyCode == Phaser.Keyboard.P){
-                if(player.animations.getAnimation('walk-right').delay == 120){
-                    player.animations.getAnimation('walk-right').delay = 50
-                    player.animations.getAnimation('walk-left').delay = 50
-                }else if(player.animations.getAnimation('walk-right').delay == 50){
-                    player.animations.getAnimation('walk-right').delay = 120
-                    player.animations.getAnimation('walk-left').delay = 120
                 }
             }
         };

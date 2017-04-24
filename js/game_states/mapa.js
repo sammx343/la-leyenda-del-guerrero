@@ -6,6 +6,7 @@ var button_group;
 var tweenBack;
 var toggle;
 var shouldLevel;
+var Level;
 var levelButtons;
 
 var Mapa = {
@@ -19,34 +20,31 @@ var Mapa = {
     map.scale.setTo(0.67);
     toggle = false;
 
-    jugar_buttons = createItem(game.width-130, game.height-50,'jugar_buttons', 0.5, 1, true, true, 0.3);
+    jugar_buttons = createItem(game.width-130, game.height-50,'jugar_buttons', 0.5, 1, true, true, 0);
     jugar_buttons.frame = 1;
     jugar_buttons.onInputDown.add(frame, this, 0);
     jugar_buttons.onInputUp.add(play);
 
+    nivel_tutorial = createItem(game.width/2-150, game.height/2-20, 'nivel_tutorial', 0.5, 0.75, true, true, 0.3);
+
     nivel_1 = createItem(game.width/2-50, game.height/2-20, 'nivel_1', 0.5, 0.7, true, true, 0.3);
-    nivel_1.events.onInputUp.add(addSelector);
-    nivel_1.frame = 1;
-    nivel_1.level = 1;
 
     nivel_2 = createItem(game.width/2+60, game.height/2+20, 'nivel_2', 0.5, 0.7, true, true, 0.3);
-    nivel_2.events.onInputUp.add(addSelector);
-    nivel_2.frame = 1;
-    nivel_2.level = 2;
 
     nivel_3 = createItem(game.width/2+80, game.height/2+120, 'nivel_3', 0.5, 0.7, true, true, 0.3);
-    nivel_3.events.onInputUp.add(addSelector);
-    nivel_3.frame = 1;
-    nivel_3.level = 3;
 
-    levelButtons = [nivel_1, nivel_2, nivel_3];
+    levelButtons = [nivel_tutorial, nivel_1, nivel_2, nivel_3];
+
     for(let i=0;i<levelButtons.length;i++){
+      levelButtons[i].events.onInputUp.add(addSelector);
+      levelButtons[i].frame = 1;
+      levelButtons[i].level = i+1;
+      levelButtons[i].map = "Mundo" + i;
       if(levelButtons[i].level == game.global.level){
         tweenBack = game.add.tween(levelButtons[i]).to( { alpha: 1 }, 600, Phaser.Easing.Linear.None, true, 1000, -1, true);
       }
     }
 
-    console.log(game.global.level);
     tweenTint(jugar_buttons, 0xFFFFFF, 0xffcccc, 1000)
     selector = game.add.image(100, 100 , 'selector');
     selector.anchor.setTo(0.5,0.5);
@@ -61,6 +59,8 @@ var Mapa = {
 
 function addSelector(button){
   shouldLevel = button.level;
+  Level = button.map;
+  console.log(Level);
   if(toggle == false){
     toggle = true;
     selector.visible = true;
@@ -78,7 +78,7 @@ function addSelector(button){
     toggle = false;
     selector.visible = false;
     if(shouldLevel <= game.global.level){
-      game.add.tween(jugar_buttons).to( { alpha: 0.3 }, 350, Phaser.Easing.Linear.None, true, 0, 0, false);   
+      game.add.tween(jugar_buttons).to( { alpha: 0 }, 350, Phaser.Easing.Linear.None, true, 0, 0, false);   
     }
     var mytween = game.add.tween(button).to( { alpha: 0.3 }, 350, Phaser.Easing.Linear.None, true, 0, 0, false);
     mytween.onComplete.add(function(){

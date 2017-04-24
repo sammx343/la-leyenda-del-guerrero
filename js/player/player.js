@@ -8,7 +8,7 @@ var jumpKey;
 var punch;
 
 function create_player(){
-  player = game.add.sprite(0, game.height - 300, 'dude');
+  player = game.add.sprite(0, 100, 'dude');
   player.scale.setTo(0.75);
   player.health = 100;
   player.alive = true;
@@ -43,8 +43,8 @@ function create_player(){
   player.animations.add('punch-down', [12], 10 , true);
   player.animations.add('jump-right', [26,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27], 8 , true);
   player.animations.add('jump-left', [32,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33], 8 , true);
-  player.animations.add('rotation-right', [38,39,40,41], 8 , true);
-  player.animations.add('rotation-left', [42,43,44,45], 8 , true);
+  player.animations.add('rotation-right', [38,39,40,41], 11 , true);
+  player.animations.add('rotation-left', [42,43,44,45], 11 , true);
   player.body.setSize(player.body.sourceWidth-35, player.body.sourceHeight-40, 15, 40);
 
   player.w = player.body.sourceWidth;
@@ -137,4 +137,16 @@ function deathHeigthAnimation(){
     player.animations.stop(null, true);
     player.frame = 25;
   }
+}
+
+function changeHealthColor(damaged){
+    if(player.health >= 0){
+       healthText.text = player.health;
+    }
+    if(player.health != damaged){
+        healthText.tint = 0xff0000;
+        setTimeout(function(){    
+          healthText.tint = 0xffffff;
+        },200)  
+    }
 }
