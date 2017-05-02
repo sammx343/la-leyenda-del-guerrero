@@ -91,7 +91,11 @@ function start(){
   game.load.atlasJSONHash('dude', 'assets/la_leyenda/heroe/heroe.png', 'js/atlas/heroe.json');
   game.load.atlasJSONHash('tigrillo1', 'assets/la_leyenda/enemigos/tigrillo1.png', 'js/atlas/tigrillo1.json');
   game.load.spritesheet('pajaro', 'assets/la_leyenda/enemigos/pajaro_spritesheet.png', 255, 229);
+  game.load.spritesheet('armadillo', 'assets/la_leyenda/enemigos/armadillo.png', 110, 68);
   game.load.image('bala_pajaro', 'assets/la_leyenda/enemigos/bala_pajaro.png');
+
+  game.load.spritesheet('bala_effect', 'assets/la_leyenda/enemigos/bala_effect.png', 112, 112);
+  game.load.spritesheet('sparks_hit', 'assets/la_leyenda/heroe/sparks_hit.png', 192, 192);
 
   game.load.start();
 }
@@ -106,5 +110,5 @@ function fileComplete(progress, cacheKey, success, totalLoaded, totalFiles) {
 }
 
 function loadComplete(){
-  scene_transition('Mundo1', 50);
+  scene_transition('Mundo0', 50);
 }

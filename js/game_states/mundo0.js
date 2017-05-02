@@ -53,20 +53,26 @@ var inGround = true;
 
 var enemies;
 var tigrillos;
-var showMenuOnce;
-var enemyNumber;
+var armadillos;
 var birdsNumber;
+var enemyNumber;
+
+var showMenuOnce;
 var obstacles;
 var traps;
 var music2;
+var worldName;
+var instructions;
+var monedas;
 
 var Mundo0 = {
 
   create : function(){
+    worldName = this.key;
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.camera.flash('#000000', 500, true);
 
-    game.world.setBounds(0, 0, 4500, 1000);
+    game.world.setBounds(0, 0, 6600, 1000);
 
     fondoJuego = game.add.tileSprite(0, 0, game.width, game.height, 'sky');
     fondoJuego.fixedToCamera = true;
@@ -102,8 +108,50 @@ var Mundo0 = {
       ground.body.immovable = true;
     }
 
-    create_player();
-    game_menu_create();
+    obstacles = game.add.group();
+    obstacles.enableBody = true;
+    obstacles.physicsBodyType = Phaser.Physics.ARCADE;
+    obstacles.enableBodyDebug = true;
+    obstacles.renderable = true;
+
+    obstacles.create(1600, 360, 'totem1');
+    obstacles.create(1850, 360, 'totem1');
+    obstacles.create(2330, 360, 'totem2');
+
+    obstacles.create(2900, 360, 'totem2');
+    obstacles.create(2900, 250, 'totem2');
+
+    obstacles.create(3800, -30, 'totem2');
+    obstacles.create(3800, 100, 'totem2');
+    obstacles.create(3800, 220, 'totem2');
+
+    obstacles.forEach(function(obstacle) {
+        obstacle.body.immovable = true;
+        obstacle.body.setSize(obstacle.width-70, obstacle.height-40, 20, 15);
+    });
+
+    traps = game.add.group();
+    traps.enableBody = true;
+    traps.physicsBodyType = Phaser.Physics.ARCADE;
+    traps.enableBodyDebug = true;
+    traps.renderable = true;
+    
+    traps.create(1650, 485, 'puas-piso');
+    traps.create(1900, 485, 'puas-piso');
+    traps.create(2120, 485, 'puas-piso');
+    traps.create(3000, 485, 'puas-piso');
+
+    traps.forEach(function(trap) {
+        trap.body.immovable = true;
+        trap.body.setSize(trap.width-50, trap.height, 10, 15);
+    });
+    
+    monedas = game.add.group();
+    monedas.enableBody = true;
+    create_player(3300,300);
+
+    armadillos = [];
+    armadillos.push(new armdll(3800, 400));
 
     platforms2 = game.add.group();
     platforms2.enableBody = true;
@@ -115,43 +163,88 @@ var Mundo0 = {
           piso2 = platforms2.create(i*1280-500, 630 - 153, 'capa12');
       }
     }
+    enemyNumber = 1;
+    instructions = game.add.group();
+    createInstruction(300 , 550, "Muevete hacia los lados con los cursores Izquierda y Derecha", 30);
+    tween(instructions.children[0], 3500);
+    createInstruction(1400 , 550, "Presiona X para saltar", 30);
+    createInstruction(2120 , 550, "Presiona de nuevo X en el aire para hacer Doble Salto", 30);
+    createInstruction(3700 , 550, "Presiona C para golpear", 30);
+    createInstruction(4100 , 550, "No sera tan facil como crees", 30);
+
+    game_menu_create();
   },
 
   update : function(){
-
     var damaged = player.health;
     game.camera.follow(player);
-    //inGround = game.physics.arcade.collide(player, platforms);
-    if((game.physics.arcade.collide(player, platforms)) && player.body.touching.down){
-        inGround = true;
-    }else{
-        inGround = false;
+
+    if(game.physics.arcade.overlap(player, obstacles.children[0], null, null,this)){
+      tween(instructions.children[1], 1500);
+    }
+
+    if(game.physics.arcade.overlap(player, obstacles.children[1], null, null,this)){
+      tween(instructions.children[2], 1500);
+    }
+
+    for (var i = 0; i < armadillos.length; i++){
+        armadillos[i].update();
+        if(game.physics.arcade.overlap(armadillos[i].armadillo, player, hitEnemy, null, this)){
+          tween(instructions.children[3], 1500);
+        }
+        if(armadillos[i].armadillo.died == false){
+            enemyNumber++;
+        }          
     }
 
     update_player();
 
-    if(Right && player.movedX != player.body.x){
-      move_parallax2(0.3, -player.speed/500);
-    }else if(Left && player.movedX != player.body.x){
-      move_parallax2(-0.3, player.speed/500);
-    }else{
-      move_parallax2(0, 0); 
+    if(enemyNumber<= 0 && showMenuOnce == false ){
+        showWin();
     }
-    changeHealthColor(damaged);   
 
+    if(player.alive == false && showMenuOnce == false ){
+        showLose();        
+    }
+
+    key_pause(this);
+    parallax2();
+    moveInstructions();
+    changeHealthColor(damaged);   
+    game.physics.arcade.collide(monedas, platforms, null, null, this);
+    game.physics.arcade.collide(monedas, obstacles, null, null, this);
     player.movedX = player.body.x;
   },
 
-  pause : function(){
+  render: function(){
+      // platforms.forEachAlive(renderGroup, this);
+      // obstacles.forEachAlive(renderGroup, this);
+      // game.debug.body(player);
+      // for (var i = 0; i < enemies.length; i++){
+      //     game.debug.body(enemies[i].bird);
+      // }
+  },
 
+  pause : function(){
+      pause();
   }
 }
 
-function move_parallax2(fondoSpeed, platformSpeed){
-  fondoLight.forEach(function(item){
-    (!game.camera.atLimit.x)? (item.x += fondoSpeed) : item;
-  });
-  platforms2.forEach(function(item){
-      (!game.camera.atLimit.x)? (item.x  += platformSpeed): item;
+function createInstruction(x, y, text, size){
+    var instruction;
+    instruction = game.add.bitmapText(x, y, 'myfont', text, size);
+    instruction.alpha = 0;
+    instructions.add(instruction);
+}
+
+function moveInstructions(){
+  instructions.forEach(function(item){
+    if(Right && player.movedX != player.body.x){
+      (!game.camera.atLimit.x)? (item.x += -player.speed/500) : item;
+    }else if(Left && player.movedX != player.body.x){
+      (!game.camera.atLimit.x)? (item.x += player.speed/500) : item;
+    }else{
+      (!game.camera.atLimit.x)? (item.x += 0) : item;
+    }
   });
 }

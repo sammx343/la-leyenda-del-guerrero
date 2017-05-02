@@ -1,13 +1,18 @@
 function hitEnemy(enemy, player){
   if(Punch && enemy.punchable && enemy.died == false){
+
+    var sparkAnimation = sparks.getFirstExists(false);
+    sparkAnimation.reset(player.x+player.width/2, player.y+player.height/2);
+    sparkAnimation.play('sparks_hit', 30, false, true);
+
     enemy.punchable = false;
     enemy.health -= player.damage;
     damageText(enemy, player.damage);
 
     if(enemy.health <= 0){
-      console.log("deberia entrar una sola vez por ave");
-      player.exp += enemy.exp;
-      sabiduriaText.text = player.exp;
+      // console.log("deberia entrar una sola vez por ave");
+      // player.exp += enemy.exp;
+      // sabiduriaText.text = player.exp;
     }
   }
 }

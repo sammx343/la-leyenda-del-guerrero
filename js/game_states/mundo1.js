@@ -1,7 +1,3 @@
-
-
-
-
 var Mundo1 = {
 
     preload : function() {
@@ -74,7 +70,7 @@ var Mundo1 = {
 
         obstacles.forEach(function(obstacle) {
             obstacle.body.immovable = true;
-            obstacle.body.setSize(obstacle.width-60, obstacle.height, 15, 15);
+            obstacle.body.setSize(obstacle.width-70, obstacle.height, 20, 15);
         });
 
         traps = game.add.group();
@@ -121,7 +117,7 @@ var Mundo1 = {
         tigrillos = [];
         tigrillos.push(new trgs(600, game.height - 200));
 
-        create_player();
+        create_player(0,300);
 
         platforms2 = game.add.group();
         platforms2.enableBody = true;
@@ -145,16 +141,8 @@ var Mundo1 = {
 
         fondoJuego.tilePosition.x -= 0.1;
         game.camera.follow(player);
-        //inGround = game.physics.arcade.collide(player, platforms);
-        if((game.physics.arcade.collide(player, platforms) || game.physics.arcade.collide(player, obstacles)) && player.body.touching.down){
-            inGround = true;
-        }else{
-            inGround = false;
-        }
 
         game.physics.arcade.collide(stars, platforms);
-        game.physics.arcade.collide(player, obstacles, null, null,this);
-        game.physics.arcade.collide(player, traps, collideTraps, null, this);
         
         game.physics.arcade.collide(monedas, platforms, null, null, this);
         game.physics.arcade.collide(monedas, obstacles, null, null, this);
@@ -163,7 +151,6 @@ var Mundo1 = {
         // game.physics.arcade.overlap(bala.bullets, player, hitPlayer, null, this);
         // game.physics.arcade.collide(bala.bullets, platforms, destroyBala, null, this);
 
-        game.physics.arcade.overlap(player, stars, collectStar, null, this);
         //game.physics.arcade.overlap(player, pajaro, touchingEnemy, null, this);
         //console.log(game.camera.atLimit);
 
@@ -197,23 +184,8 @@ var Mundo1 = {
             finalGoldText.text = player.gold;
         }
 
-        game.input.keyboard.onUpCallback = function (e) {
-            if(e.keyCode == Phaser.Keyboard.ENTER || e.keyCode == Phaser.Keyboard.ESC){
-                if(game.paused == false){
-                    Mundo1.pause();
-                }else{
-                    unpause();
-                }
-            }
-        };
-
-        if(Right && player.movedX != player.body.x){
-          move_parallax(-player.speed/350, -player.speed/52);
-        }else if(Left && player.movedX != player.body.x){
-          move_parallax(player.speed/350, player.speed/52);
-        }else{
-          move_parallax(0, 0); 
-        }
+        key_pause();
+        parallax1();
         changeHealthColor(damaged);   
 
         player.movedX = player.body.x;
@@ -222,22 +194,14 @@ var Mundo1 = {
     render: function(){
         // platforms.forEachAlive(renderGroup, this);
         // obstacles.forEachAlive(renderGroup, this);
-        game.debug.body(player);
+        // game.debug.body(player);
         // for (var i = 0; i < enemies.length; i++){
         //     game.debug.body(enemies[i].bird);
         // }
     },
 
     pause : function(){
-        if(player.died == false && enemyNumber>0){
-            game.input.onDown.add(pressed_buttons, self);
-            game.input.onUp.add(released_buttons, self);
-            pause_menu.visible = true;
-            continue_button.visible = true;
-            retry_button.visible = true;
-            exit_button.visible = true;
-            game.paused = true;
-        }
+        pause();
     }
 }
 
@@ -259,59 +223,6 @@ function renderGroup(member) {
     game.debug.body(member);
 }
 
-function move_parallax(fondoSpeed, platformSpeed){
-  fondoLight.forEach(function(item){
-    (!game.camera.atLimit.x)? (item.tilePosition.x += fondoSpeed) : item;
-  });
-  platforms2.forEach(function(item){
-      (!game.camera.atLimit.x)? (item.cameraOffset.x  += platformSpeed): item;
-  });
-}
-
-function pressed_buttons(event){
-    if(game.paused){
-        clicked(event, continue_button, 1);
-        clicked(event, retry_button, 1);
-        clicked(event, exit_button, 1);
-        clicked(event, pause_button, 1);
-    }
-}
-
-function released_buttons(event){
-    if(game.paused){
-        if(clicked(event, continue_button, 0)){
-            unpause();
-        }else if(clicked(event, retry_button, 0)){
-            game.state.start('Mundo1');
-            unpause();
-        }else if(clicked(event, exit_button, 0)){
-            game.state.start('Mapa');
-            unpause();
-        }else if(clicked(event, pause_button, 0)){
-            unpause();
-        }   
-    }
-}
-
-function clicked(event, button , fr){
-    var x1 = button.cameraOffset.x - button.width/2;
-    var x2 = button.cameraOffset.x + button.width/2;
-    var y1 = button.cameraOffset.y - button.height/2;
-    var y2 = button.cameraOffset.y + button.height/2;
-
-    var pressed = event.x > x1 && event.x < x2 && event.y > y1 && event.y < y2;
-    if(pressed){ button.frame = fr};
-    return (pressed);
-}
-
-function unpause(){
-    continue_button.visible = false;
-    retry_button.visible = false;
-    exit_button.visible = false;
-    pause_menu.visible = false;
-    game.paused = false;
-}
-
 function collectStar(player, star){
     star.destroy();
     score += 10;
@@ -320,28 +231,5 @@ function collectStar(player, star){
 function listener () {
 }
 
-function getMonedas(player, moneda){
-    moneda.kill();
-    goldText.text = player.gold;
-    if(moneda.key == 'oro_5'){
-        player.gold += 5;
-    }else{
-        player.gold += 1;
-    }
-    goldText.tint = 0xFFFF00;
-    setTimeout(function(){    
-      goldText.tint = 0xffffff;
-    },300)
-}
 
-function changeHealthColor(damaged){
-    if(player.health >= 0){
-       healthText.text = player.health;
-    }
-    if(player.health != damaged){
-        healthText.tint = 0xff0000;
-        setTimeout(function(){    
-          healthText.tint = 0xffffff;
-        },200)  
-    }
-}
+

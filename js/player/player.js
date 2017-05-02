@@ -6,14 +6,15 @@ var Punch = false;
 var Anim;
 var jumpKey;
 var punch;
+var sparks;
 
-function create_player(){
-  player = game.add.sprite(0, 100, 'dude');
+function create_player(x,y){
+  player = game.add.sprite(x,y, 'dude');
   player.scale.setTo(0.75);
   player.health = 100;
   player.alive = true;
   player.gold = 0;
-  player.speed = 180;
+  player.speed = 200;
   player.died = false;
   player.damage = 20;
   player.Side = "Right";
@@ -45,13 +46,23 @@ function create_player(){
   player.animations.add('jump-left', [32,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33], 8 , true);
   player.animations.add('rotation-right', [38,39,40,41], 11 , true);
   player.animations.add('rotation-left', [42,43,44,45], 11 , true);
-  player.body.setSize(player.body.sourceWidth-35, player.body.sourceHeight-40, 15, 40);
+  player.body.setSize(player.body.sourceWidth-35, player.body.sourceHeight-30, 15, 25);
+
+  sparks = game.add.group();
+  for (var i = 0; i < 10; i++)
+  {
+      var sparkAnimation = sparks.create(0, 0, 'sparks_hit', [0], false);
+      sparkAnimation.scale.setTo(0.65);
+      sparkAnimation.anchor.setTo(0.5);
+      sparkAnimation.animations.add('sparks_hit');
+  }
 
   player.w = player.body.sourceWidth;
   player.h = player.body.sourceHeight;
 }
 
 function update_player(){
+  player_collisions();
   player.body.velocity.x = 0;
   if(player.health > 0 && player.win == false){
       //MOVIMIENTO
@@ -122,6 +133,20 @@ function update_player(){
   deathHeigthAnimation();
 }
 
+function player_collisions(){
+  //inGround = game.physics.arcade.collide(player, platforms);
+  if((game.physics.arcade.collide(player, platforms) || game.physics.arcade.collide(player, obstacles)) && player.body.touching.down){
+      inGround = true;
+  }else{
+      inGround = false;
+  }
+
+  game.physics.arcade.collide(player, obstacles, null, null,this);
+  game.physics.arcade.overlap(player, traps, collideTraps, null, this);
+  game.physics.arcade.overlap(player, stars, collectStar, null, this);
+  game.physics.arcade.overlap(monedas, player, getMonedas, null, this);
+}
+
 function movePlayerX(speed, sd){
   player.body.velocity.x = speed;
   if(Punch == false){
@@ -149,4 +174,21 @@ function changeHealthColor(damaged){
           healthText.tint = 0xffffff;
         },200)  
     }
+}
+
+function getMonedas(player, moneda){
+    //goldText.text = player.gold;
+    // goldText.tint = 0xFFFF00;
+    console.log("something here");
+    if(moneda.key == 'oro_5'){
+      console.log("sisa");
+        player.exp += 5;
+    }else{
+        player.exp += 1;
+    }
+    sabiduriaText.text = player.exp;
+    // setTimeout(function(){    
+    //   goldText.tint = 0xffffff;
+    // },300)
+    moneda.kill();
 }

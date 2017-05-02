@@ -1,9 +1,10 @@
 
 function game_menu_create(){
   var move = 20;
+  showMenuOnce = false;
   pause_menu = createItem(game.width/2, game.height/2, 'pause_menu', 0.5, 0.8, true, false);
 
-  pause_button = game.add.button(game.width/20, move*3 , 'pause_button' , Mundo1.pause , this, 0, 0 , 1, 0);
+  pause_button = game.add.button(game.width/20, move*3 , 'pause_button' , Mundo0.pause , this, 0, 0 , 1, 0);
   pause_button.scale.setTo(0.9);
   pause_button.anchor.setTo(0.5);
   pause_button.fixedToCamera = true;
@@ -16,14 +17,14 @@ function game_menu_create(){
   healthText.anchor.setTo(0.5);
   healthText.fixedToCamera = true;
 
-  oro = game.add.sprite(game.width/2, move*3 , 'oro');
-  oro.anchor.setTo(0.5);
-  oro.scale.setTo(0.6);
-  oro.fixedToCamera = true;
+  // oro = game.add.sprite(game.width/2, move*3 , 'oro');
+  // oro.anchor.setTo(0.5);
+  // oro.scale.setTo(0.6);
+  // oro.fixedToCamera = true;
   
-  goldText = game.add.bitmapText(game.width/2 + oro.width/1.3, move*3 + 5 , 'myfont', '', 40);
-  goldText.anchor.setTo(0.5);
-  goldText.fixedToCamera = true;
+  // goldText = game.add.bitmapText(game.width/2 + oro.width/1.3, move*3 + 5 , 'myfont', '', 40);
+  // goldText.anchor.setTo(0.5);
+  // goldText.fixedToCamera = true;
 
   sabiduria = game.add.sprite(game.width/1.2, move*3 , 'sabiduria');
   sabiduria.anchor.setTo(0.5);

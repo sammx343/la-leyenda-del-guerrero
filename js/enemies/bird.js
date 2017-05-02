@@ -1,5 +1,7 @@
 
 var id = 0;
+var bala_effect;
+var explosions;
 
 birds = function(x,y){
   this.name = "bird";
@@ -28,6 +30,16 @@ birds = function(x,y){
   bird.bala.trackSprite(bird, -40, -10, true);
   bird.punchable = true;
   bird.exp = 30;
+
+  explosions = game.add.group();
+  for (var i = 0; i < 10; i++)
+  {
+      var explosionAnimation = explosions.create(0, 0, 'bala_effect', [0], false);
+      explosionAnimation.scale.setTo(0.65);
+      explosionAnimation.anchor.setTo(0.5);
+      explosionAnimation.animations.add('bala_effect');
+  }
+
   bird.body.setSize(bird.width-bird.width/10, bird.height-bird.height/10, 40, 40);
   this.bird = bird;
 }
@@ -105,6 +117,9 @@ function destroyBala(bala, piso){
 
 function hitPlayer(player, bala){
   player.health -= bird.damage;
+  var explosionAnimation = explosions.getFirstExists(false);
+  explosionAnimation.reset(bala.x, bala.y);
+  explosionAnimation.play('bala_effect', 25, false, true);
   bala.kill();
   damageText(player, bird.damage)
 }

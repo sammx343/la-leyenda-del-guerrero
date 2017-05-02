@@ -16,7 +16,6 @@ trgs = function(x,y){
   tigrillo.animations.add('Right', [4,5,6,7],10,true);
   tigrillo.side = "Left";
   this.tigrillo = tigrillo;
-
 }
 
 trgs.prototype.update = function(){
@@ -25,6 +24,9 @@ trgs.prototype.update = function(){
   if(tigrillo.health <= 0 && tigrillo.died == false){
     tigrillo.died = true;
     let birdTween = game.add.tween(tigrillo).to( { alpha: 0 }, 800, Phaser.Easing.Linear.None, true, 0, 0, false);
+    birdTween.onComplete.add(function(){
+      tigrillo.kill();
+    }, this);
   }
 
   if(tigrillo.side == "Right"){
