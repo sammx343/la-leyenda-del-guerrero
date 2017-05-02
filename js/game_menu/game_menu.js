@@ -1,10 +1,10 @@
 
-function game_menu_create(){
+function game_menu_create(Mundo){
   var move = 20;
   showMenuOnce = false;
   pause_menu = createItem(game.width/2, game.height/2, 'pause_menu', 0.5, 0.8, true, false);
 
-  pause_button = game.add.button(game.width/20, move*3 , 'pause_button' , Mundo0.pause , this, 0, 0 , 1, 0);
+  pause_button = game.add.button(game.width/20, move*3 , 'pause_button' , Mundo.pause , this, 0, 0 , 1, 0);
   pause_button.scale.setTo(0.9);
   pause_button.anchor.setTo(0.5);
   pause_button.fixedToCamera = true;
@@ -53,7 +53,7 @@ function game_menu_create(){
   button_exit_lose.onInputUp.add(button_sprite_up);
 
   button_retry_lose = createItem(game.width/2 + game.width/10 + move, game.height/2 + game.height/7, 'button_retry_lose', 0.5, 0.8, true, false, 0);
-  button_retry_lose.upAction = function(){game.state.start('Mundo1')};
+  button_retry_lose.upAction = function(){game.state.start(Mundo.key)};
   button_retry_lose.onInputDown.add(button_sprite_down);
   button_retry_lose.onInputUp.add(button_sprite_up);
 
@@ -63,7 +63,7 @@ function game_menu_create(){
   head_win.animations.add('smile', [0,1,2,3,2,1], 6 , true);
 
   button_retry_win = createItem(game.width/2 - game.width/12 + move, game.height/2 + game.height/7, 'button_retry_win', 0.5, 0.8, true, false, 0);
-  button_retry_win.upAction = function(){game.state.start('Mundo1')};
+  button_retry_win.upAction = function(){game.state.start(Mundo.key)};
   button_retry_win.onInputDown.add(button_sprite_down);
   button_retry_win.onInputUp.add(button_sprite_up);
 

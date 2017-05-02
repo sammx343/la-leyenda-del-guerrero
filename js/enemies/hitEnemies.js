@@ -10,6 +10,8 @@ function hitEnemy(enemy, player){
     damageText(enemy, player.damage);
 
     if(enemy.health <= 0){
+
+      create_gold(enemy);
       // console.log("deberia entrar una sola vez por ave");
       // player.exp += enemy.exp;
       // sabiduriaText.text = player.exp;

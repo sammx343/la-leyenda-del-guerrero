@@ -27,9 +27,7 @@ armdll.prototype.update = function(){
     armadillo.died = true;
     let birdTween = game.add.tween(armadillo).to( { alpha: 0 }, 1200, Phaser.Easing.Linear.None, true, 0, 0, false);
     birdTween.onComplete.add(function(){
-      create_gold(armadillo);
       armadillo.kill();
-      tween(instructions.children[4], 1500);
     }, this);
   }
 
@@ -40,7 +38,7 @@ armdll.prototype.update = function(){
 }
 
 function armadilloPush(armadillo, player){
-  if(Punch == false){
+  if(Punch == false && armadillo.died == false){
     player.body.acceleration.x -= 60000;
     player.health -= armadillo.damage;
     damageText(player, armadillo.damage)

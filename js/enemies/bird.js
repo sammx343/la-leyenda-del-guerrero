@@ -3,13 +3,13 @@ var id = 0;
 var bala_effect;
 var explosions;
 
-birds = function(x,y){
+birds = function(x,y, health, damage){
   this.name = "bird";
   bird = game.add.sprite(x, y, 'pajaro');
   bird.scale.setTo(0.65);
   bird.anchor.setTo(0.5);
   game.physics.arcade.enable(bird);
-  bird.damage = 5;
+  bird.damage = damage;
   bird.minHeigth = rnd(50,150);
   bird.maxHeigth = rnd(200,250);
   bird.minWidth = rnd(50,250);
@@ -20,7 +20,7 @@ birds = function(x,y){
   bird.animations.add('fly_right', [ 4, 4, 4, 5, 5, 6, 6, 7, 7, 7 , 6 , 6 , 5 , 5], 25, true);
   bird.id = id++;
   bird.died = false;
-  bird.health = 80;
+  bird.health = health;
   bird.bala = game.add.weapon(30,'bala_pajaro'); 
   bird.bala.bulletKillType = Phaser.Weapon.KILL_CAMERA_BOUNDS;
   bird.backToDamage = 500;

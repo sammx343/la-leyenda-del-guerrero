@@ -6,7 +6,6 @@ var Mundo1 = {
 
     create: function(){
         var tam = -100;
-        showMenuOnce = false;
 
         // music.removeMarker("music1")
         // music.stop();
@@ -111,7 +110,7 @@ var Mundo1 = {
         enemies = [];
 
         for (var i = 0; i < birdsNumber; i++){
-          enemies.push(new birds(500*(i+1)+1500, game.height - 500));
+          enemies.push(new birds(500*(i+1)+1500, game.height - 500, 100, 20));
         }
 
         tigrillos = [];
@@ -132,7 +131,7 @@ var Mundo1 = {
             }
             piso2.fixedToCamera = true;
         }
-        game_menu_create();
+        game_menu_create(this);
     },
 
     update: function(){

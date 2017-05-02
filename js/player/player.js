@@ -14,7 +14,7 @@ function create_player(x,y){
   player.health = 100;
   player.alive = true;
   player.gold = 0;
-  player.speed = 200;
+  player.speed = 400;
   player.died = false;
   player.damage = 20;
   player.Side = "Right";

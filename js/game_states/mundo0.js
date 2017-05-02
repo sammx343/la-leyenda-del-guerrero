@@ -124,6 +124,7 @@ var Mundo0 = {
     obstacles.create(3800, -30, 'totem2');
     obstacles.create(3800, 100, 'totem2');
     obstacles.create(3800, 220, 'totem2');
+    obstacles.create(5300, 360, 'totem2');
 
     obstacles.forEach(function(obstacle) {
         obstacle.body.immovable = true;
@@ -148,7 +149,7 @@ var Mundo0 = {
     
     monedas = game.add.group();
     monedas.enableBody = true;
-    create_player(3300,300);
+    create_player(0, 300);
 
     armadillos = [];
     armadillos.push(new armdll(3800, 400));
@@ -166,16 +167,25 @@ var Mundo0 = {
     enemyNumber = 1;
     instructions = game.add.group();
     createInstruction(300 , 550, "Muevete hacia los lados con los cursores Izquierda y Derecha", 30);
-    tween(instructions.children[0], 3500);
     createInstruction(1400 , 550, "Presiona X para saltar", 30);
     createInstruction(2120 , 550, "Presiona de nuevo X en el aire para hacer Doble Salto", 30);
-    createInstruction(3700 , 550, "Presiona C para golpear", 30);
-    createInstruction(4100 , 550, "No sera tan facil como crees", 30);
+    createInstruction(3700 , 550, "Presiona C para golpear...", 30);
+    createInstruction(3970 , 550, "No sera tan facil como crees", 30);
+    createInstruction(4400 , 540, "Sigue hacia adelante, derrota al siguiente enemigo para ganar", 30);
+    createInstruction(5200 , 535, "Cada enemigo derrotado te da sabiduria. \nRecoge tanta como puedas, la vas a necesitar", 30);
 
-    game_menu_create();
+    tween(instructions.children[0], 3500);
+    birdsNumber = 1;
+    enemies = [];
+
+    for (var i = 0; i < birdsNumber; i++){
+      enemies.push(new birds(4300*(i+1)+1500, game.height - 500, 200, 8));
+    }
+    game_menu_create(this);
   },
 
   update : function(){
+    enemyNumber = 0;
     var damaged = player.health;
     game.camera.follow(player);
 
@@ -193,12 +203,31 @@ var Mundo0 = {
           tween(instructions.children[3], 1500);
         }
         if(armadillos[i].armadillo.died == false){
-            enemyNumber++;
+          enemyNumber++;
+        }else{
+          tween(instructions.children[4], 1500);
         }          
     }
 
-    update_player();
+    for (var i = 0; i < enemies.length; i++){
+      enemies[i].update();
+      game.physics.arcade.overlap(enemies[i].bird, player, hitEnemy, null, this);
+      if(enemies[i].bird.died == false){
+          enemyNumber++;
+      }          
+    }
 
+    if(player.x >= 4200){
+      tween(instructions.children[5], 1500);
+    }
+
+    if(player.x >= 4800){
+      tween(instructions.children[6], 1500);    
+    }
+
+    update_player();
+    console.log(showMenuOnce);
+    console.log(enemyNumber);
     if(enemyNumber<= 0 && showMenuOnce == false ){
         showWin();
     }
