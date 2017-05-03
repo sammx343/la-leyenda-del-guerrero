@@ -132,6 +132,10 @@ var Mundo1 = {
             }
             piso2.fixedToCamera = true;
         }
+
+        instructions = game.add.group();
+        createInstruction(300 , 500, "Derrota a TODOS los enemigos para completar el nivel ", 30);
+        tween(instructions.children[0], 1500);
         game_menu_create(this);
     },
 

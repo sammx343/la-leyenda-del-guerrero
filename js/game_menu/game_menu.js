@@ -2,6 +2,7 @@
 function game_menu_create(Mundo){
   var move = 20;
   showMenuOnce = false;
+  worldName = Mundo.key;
   pause_menu = createItem(game.width/2, game.height/2, 'pause_menu', 0.5, 0.8, true, false);
 
   pause_button = game.add.button(game.width/20, move*3 , 'pause_button' , Mundo.pause , this, 0, 0 , 1, 0);

@@ -68,7 +68,6 @@ var monedas;
 var Mundo0 = {
 
   create : function(){
-    worldName = this.key;
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.camera.flash('#000000', 500, true);
 

@@ -36,6 +36,7 @@ function released_buttons(event){
         if(clicked(event, continue_button, 0)){
             unpause();
         }else if(clicked(event, retry_button, 0)){
+            console.log(worldName);
             game.state.start(worldName);
             unpause();
         }else if(clicked(event, exit_button, 0)){
