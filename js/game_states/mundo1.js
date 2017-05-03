@@ -6,6 +6,7 @@ var Mundo1 = {
 
     create: function(){
         var tam = -100;
+        showMenuOnce = false;
 
         // music.removeMarker("music1")
         // music.stop();
@@ -110,7 +111,7 @@ var Mundo1 = {
         enemies = [];
 
         for (var i = 0; i < birdsNumber; i++){
-          enemies.push(new birds(500*(i+1)+1500, game.height - 500, 100, 20));
+          enemies.push(new birds(500*(i+1)+1500, game.height - 500, 120, 10));
         }
 
         tigrillos = [];
@@ -153,21 +154,7 @@ var Mundo1 = {
         //game.physics.arcade.overlap(player, pajaro, touchingEnemy, null, this);
         //console.log(game.camera.atLimit);
 
-        for (var i = 0; i < enemies.length; i++){
-            enemies[i].update();
-            game.physics.arcade.overlap(enemies[i].bird, player, hitEnemy, null, this);
-            if(enemies[i].bird.died == false){
-                enemyNumber++;
-            }          
-        }
-
-        for (var i = 0; i < tigrillos.length; i++){
-            tigrillos[i].update();
-            game.physics.arcade.overlap(tigrillos[i].tigrillo, player, hitEnemy, null, this);
-            if(tigrillos[i].tigrillo.died == false){
-                enemyNumber++;
-            }          
-        }
+        update_enemies(enemies.length, tigrillos.length);
 
         update_player();
 
@@ -229,6 +216,3 @@ function collectStar(player, star){
 
 function listener () {
 }
-
-
-

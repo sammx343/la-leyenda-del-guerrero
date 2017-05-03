@@ -14,7 +14,7 @@ function create_player(x,y){
   player.health = 100;
   player.alive = true;
   player.gold = 0;
-  player.speed = 400;
+  player.speed = 200;
   player.died = false;
   player.damage = 20;
   player.Side = "Right";
@@ -179,16 +179,18 @@ function changeHealthColor(damaged){
 function getMonedas(player, moneda){
     //goldText.text = player.gold;
     // goldText.tint = 0xFFFF00;
-    console.log("something here");
-    if(moneda.key == 'oro_5'){
-      console.log("sisa");
-        player.exp += 5;
-    }else{
-        player.exp += 1;
+
+    if(player.died == false && player.win == false){
+      if(moneda.key == 'oro_5'){
+          player.exp += 5;
+      }else{
+          player.exp += 1;
+      }
+      console.log("eche que monda cole");
+      sabiduriaText.text = player.exp;
+      // setTimeout(function(){    
+      //   goldText.tint = 0xffffff;
+      // },300)
+      moneda.kill();
     }
-    sabiduriaText.text = player.exp;
-    // setTimeout(function(){    
-    //   goldText.tint = 0xffffff;
-    // },300)
-    moneda.kill();
 }

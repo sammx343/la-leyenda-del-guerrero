@@ -110,5 +110,5 @@ function fileComplete(progress, cacheKey, success, totalLoaded, totalFiles) {
 }
 
 function loadComplete(){
-  scene_transition('Mundo0', 50);
+  scene_transition('Mundo1', 50);
 }

@@ -226,8 +226,6 @@ var Mundo0 = {
     }
 
     update_player();
-    console.log(showMenuOnce);
-    console.log(enemyNumber);
     if(enemyNumber<= 0 && showMenuOnce == false ){
         showWin();
     }

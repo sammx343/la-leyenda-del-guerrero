@@ -19,7 +19,6 @@ armdll = function(x,y){
   this.armadillo = armadillo;
 }
 
-
 armdll.prototype.update = function(){
   armadillo = this.armadillo;
   
@@ -34,7 +33,6 @@ armdll.prototype.update = function(){
   game.physics.arcade.overlap(armadillo, player, armadilloPush, null, this);
   game.physics.arcade.collide(armadillo, platforms, null, null, this);
   game.physics.arcade.collide(armadillo, obstacles, null, null, this);
-  
 }
 
 function armadilloPush(armadillo, player){
@@ -48,5 +46,5 @@ function armadilloPush(armadillo, player){
   setTimeout(function(){    
     armadillo.animations.play('Left');
     player.body.acceleration.x = 0;
-  },600)
+  },600);
 }
