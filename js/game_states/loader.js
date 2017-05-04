@@ -65,6 +65,19 @@ function start(){
   game.load.image('totem1', 'assets/la_leyenda/nivel1/obstaculos/totem1.png');
   game.load.image('totem2', 'assets/la_leyenda/nivel1/obstaculos/totem2.png');
 
+  //MUNDO 2 LOADER
+  game.load.image('moon', 'assets/la_leyenda/nivel2/fondo2.png');
+  game.load.image('noche11', 'assets/la_leyenda/nivel2/nivel2_capa11.png');
+  game.load.image('noche12', 'assets/la_leyenda/nivel2/nivel2_capa12.png');
+  game.load.image('noche21', 'assets/la_leyenda/nivel2/nivel2_capa31.png');
+  game.load.image('noche22', 'assets/la_leyenda/nivel2/nivel2_capa32.png');
+  game.load.image('noche31', 'assets/la_leyenda/nivel2/nivel2_capa21.png');
+  game.load.image('noche32', 'assets/la_leyenda/nivel2/nivel2_capa22.png');
+  game.load.image('piedras2', 'assets/la_leyenda/nivel2/obstaculos/piedras2.png');
+  game.load.image('totem21', 'assets/la_leyenda/nivel2/obstaculos/totem21.png');
+  game.load.image('totem22', 'assets/la_leyenda/nivel2/obstaculos/totem22.png')
+  game.load.image('puas21', 'assets/la_leyenda/nivel2/obstaculos/puas21.png');;
+
   game.load.spritesheet('pause_button', 'assets/la_leyenda/menu/pause_menu/pause_button.png', 75, 90);
   game.load.image('vida', 'assets/la_leyenda/menu/vida.png');
   game.load.image('oro', 'assets/la_leyenda/menu/oro.png');
@@ -100,7 +113,7 @@ function start(){
   game.load.start();
 }
 
-function loadStart() {
+function loadStart(){
   loadText.setText("Loading ...");
 }
 
@@ -110,5 +123,5 @@ function fileComplete(progress, cacheKey, success, totalLoaded, totalFiles) {
 }
 
 function loadComplete(){
-  scene_transition('Mundo1', 50);
+  scene_transition('Mundo2', 50);
 }

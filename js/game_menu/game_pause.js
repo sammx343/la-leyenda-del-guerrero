@@ -1,5 +1,5 @@
 function pause(){
-  if(player.died == false && enemyNumber>0){
+  if(player.died == false && player.win == false){
       game.input.onDown.add(pressed_buttons, self);
       game.input.onUp.add(released_buttons, self);
       pause_menu.visible = true;
@@ -10,11 +10,11 @@ function pause(){
   }
 }
 
-function key_pause(){
+function key_pause(world){
   game.input.keyboard.onUpCallback = function (e) {
       if(e.keyCode == Phaser.Keyboard.ENTER || e.keyCode == Phaser.Keyboard.ESC){
           if(game.paused == false){
-              Mundo0.pause();
+              world.pause();
           }else{
               unpause();
           }

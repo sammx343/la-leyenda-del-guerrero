@@ -6,7 +6,6 @@ var Mundo1 = {
 
     create: function(){
         var tam = -100;
-        showMenuOnce = false;
 
         // music.removeMarker("music1")
         // music.stop();
@@ -56,7 +55,6 @@ var Mundo1 = {
                 ground.body.setSize(ground.width, ground.height, 0, 74);
             }
         }
-
 
         obstacles = game.add.group();
         obstacles.enableBody = true;
@@ -174,7 +172,7 @@ var Mundo1 = {
             finalGoldText.text = player.gold;
         }
 
-        key_pause();
+        key_pause(this);
         parallax1();
         changeHealthColor(damaged);   
 
