@@ -1,7 +1,7 @@
 var game = new Phaser.Game(980, 600, Phaser.CANVAS, 'bloque_juego');
 
 game.global = {
-  level : 2
+  level : 1
 }
 
 game.state.add('Loader', Loader);

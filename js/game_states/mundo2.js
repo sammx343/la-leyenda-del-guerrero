@@ -10,7 +10,7 @@ var Mundo2 = {
     game.world.setBounds(0, 0, 6600, 1000);
 
     fondoJuego = game.add.tileSprite(0, -100, 1400, 1010, 'moon');
-    fondoJuego.scale.setTo(0.8 , 0.8);
+    fondoJuego.scale.setTo(0.6 , 0.6);
     fondoJuego.fixedToCamera = true;
 
     fondoLight = game.add.group();
@@ -47,9 +47,27 @@ var Mundo2 = {
     obstacles.enableBodyDebug = true;
     obstacles.renderable = true;
 
-    obstacles.create(1650-1000, 500, 'totem21');
-    obstacles.create(1900-1000, 500, 'totem22');
-    obstacles.create(2120-1000, 500, 'totem21');
+    obstacles.create(650, 500, 'totem21');
+    obstacles.create(950, 500, 'totem22');
+    obstacles.create(1250, 500, 'totem21');
+    obstacles.create(1550, 500, 'totem21');
+    obstacles.create(1840, 500, 'totem22');
+    obstacles.create(2445, 500, 'totem21');
+
+    obstacles.create(3000, 500, 'totem21');
+    obstacles.create(3000, 350, 'totem21');
+
+
+    obstacles.create(3500, 500, 'totem22');
+    obstacles.create(3500, 350, 'totem22');
+
+
+    obstacles.create(4000, 500, 'totem21');
+    obstacles.create(4000, 350, 'totem21');
+
+    armadillos = [];
+    armadillos.push(new armdll(3150, 320));
+    armadillos.push(new armdll(3650, 200));
 
     obstacles.scale.setTo(0.9);
 
@@ -58,7 +76,25 @@ var Mundo2 = {
         obstacle.body.setSize(obstacle.width-70, obstacle.height-40, 20, 15);
     });
 
-    create_player(0, 200);
+    traps = game.add.group();
+    traps.enableBody = true;
+    traps.physicsBodyType = Phaser.Physics.ARCADE;
+    traps.enableBodyDebug = true;
+    traps.renderable = true;
+    
+    traps.create(650, 570, 'puas-piso');
+    traps.create(930, 570, 'puas-piso');
+    traps.create(1190, 570, 'puas-piso');
+    traps.create(1460, 570, 'puas-piso');
+    traps.create(1790, 570, 'puas-piso');
+    traps.create(1930, 570, 'puas-piso');
+
+    traps.forEach(function(trap) {
+        trap.body.immovable = true;
+        trap.body.setSize(trap.width-50, trap.height, 10, 15);
+    });
+
+    create_player(3000, 200);
 
     platforms2 = game.add.group();
     platforms2.enableBody = true;
@@ -71,21 +107,55 @@ var Mundo2 = {
       }
     }
     platforms2.scale.setTo(0.64 , 0.64);
+
+    enemies = [];
+    enemies.push(new birds(1500, game.height - 500, 120, 12));
+    enemies.push(new birds(2300, game.height - 500, 120, 12));
+
+    instructions = game.add.group();
+    createInstruction(300 , 300, "Intenta no perder mucha vida", 30);
+    tween(instructions.children[0], 1500);
     game_menu_create(this);
   },
 
   update: function(){
-    enemyNumber = 0;
+    enemyNumber = 1;
     var damaged = player.health;
     game.camera.follow(player);
     update_player();
 
+    for (var i = 0; i < enemies.length; i++){
+      enemies[i].update();
+      game.physics.arcade.overlap(enemies[i].bird, player, hitEnemy, null, this);
+      if(enemies[i].bird.died == false){
+          enemyNumber++;
+      }          
+    }
+
+    for (var i = 0; i < armadillos.length; i++){
+      armadillos[i].update();
+      if(game.physics.arcade.overlap(armadillos[i].armadillo, player, hitEnemy, null, this)){
+        console.log("no son las pullas cachon");
+      }
+      if(armadillos[i].armadillo.died == false){
+        enemyNumber++;
+      }        
+    }
+
+    if(enemyNumber<= 0 && showMenuOnce == false ){
+        showWin();
+    }
+
+    if(player.alive == false && showMenuOnce == false ){
+        showLose();        
+    }
+
     key_pause(this);
     parallax2();
-    changeHealthColor(damaged);   
-    // game.physics.arcade.collide(monedas, platforms, null, null, this);
-    // game.physics.arcade.collide(monedas, obstacles, null, null, this);
+    changeHealthColor(damaged); 
     player.movedX = player.body.x;
+    game.physics.arcade.collide(monedas, platforms, null, null, this);
+    game.physics.arcade.collide(monedas, obstacles, null, null, this);
   },
 
   render: function(){

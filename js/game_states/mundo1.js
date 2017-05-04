@@ -160,8 +160,14 @@ var Mundo1 = {
 
         update_player();
 
-        if(enemyNumber<= 0 && showMenuOnce == false ){
-            showWin();
+        if(enemyNumber <= 0){
+          setTimeout(function(){
+            player.win  = true;
+          },4000);
+        }
+
+        if(player.win && showMenuOnce == false ){
+          showWin();
         }
 
         if(player.alive == false && showMenuOnce == false ){

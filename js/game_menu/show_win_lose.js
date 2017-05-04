@@ -4,7 +4,6 @@ function showWin(){
   finalGoldText.visible = false;
   game.global.level++;
   setTimeout(function(){
-     player.win = true;    
      tween(menu_win, 1000);
      tween(head_win);
      tween(button_continue_win);
@@ -18,7 +17,7 @@ function showWin(){
      finalGoldText.anchor.setTo(0.5);
      finalGoldText.visible = true;
      finalGoldText.tint = 0x444444;
-  },2000)
+  },500)
 }
 
 function showLose(){
