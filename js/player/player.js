@@ -78,10 +78,16 @@ function update_player(){
       }else{
         movePlayerX(0, player.Side); 
       }  
-
+      //console.log(player.body.velocity.y);
       if(!Punch){
-        Jump? (player.body.velocity.y = player.jumpVelocity, jumpKey.isDown = false) : null;
-        (jumpKey.isDown && DoubleJump == false)? (player.body.velocity.y = player.doubleJumpVelocity, DoubleJump = true) : null;
+        if(Jump){
+          player.body.velocity.y = player.jumpVelocity;
+          jumpKey.isDown = false;
+        }
+        if(jumpKey.isDown && DoubleJump == false && player.body.velocity.y > -300){
+          player.body.velocity.y = player.doubleJumpVelocity;
+          DoubleJump = true;
+        }
       }
 
       //SPRITES
@@ -144,7 +150,6 @@ function player_collisions(){
   game.physics.arcade.collide(player, obstacles, null, null,this);
   game.physics.arcade.overlap(player, traps, collideTraps, null, this);
   game.physics.arcade.overlap(player, stars, collectStar, null, this);
-  game.physics.arcade.overlap(monedas, player, getMonedas, null, this);
 }
 
 function movePlayerX(speed, sd){

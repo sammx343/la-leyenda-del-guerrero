@@ -20,7 +20,7 @@ var Mundo1 = {
         // }else{
         //  music2.play();
         // }
-
+        create_world()
         game.physics.startSystem(Phaser.Physics.ARCADE);
         game.camera.flash('#000000', 500, true);
         game.world.setBounds(0, 0, 4500, 500);

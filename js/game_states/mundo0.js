@@ -70,7 +70,7 @@ var Mundo0 = {
   create : function(){
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.camera.flash('#000000', 500, true);
-
+    create_world();
     game.world.setBounds(0, 0, 6600, 1000);
 
     fondoJuego = game.add.tileSprite(0, 0, game.width, game.height, 'sky');
@@ -151,7 +151,7 @@ var Mundo0 = {
     create_player(0, 300);
 
     armadillos = [];
-    armadillos.push(new armdll(3800, 400));
+    armadillos.push(new armdll(3800, 400, 20, 5));
 
     platforms2 = game.add.group();
     platforms2.enableBody = true;

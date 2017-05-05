@@ -8,9 +8,10 @@ var Mundo2 = {
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.camera.flash('#000000', 500, true);
     game.world.setBounds(0, 0, 6600, 1000);
+    //create_world();
 
-    fondoJuego = game.add.tileSprite(0, -100, 1400, 1010, 'moon');
-    fondoJuego.scale.setTo(0.6 , 0.6);
+    fondoJuego = game.add.tileSprite(-200, -200, 1400, 1010, 'moon');
+    fondoJuego.scale.setTo(0.85 , 0.85);
     fondoJuego.fixedToCamera = true;
 
     fondoLight = game.add.group();
@@ -61,13 +62,17 @@ var Mundo2 = {
     obstacles.create(3500, 500, 'totem22');
     obstacles.create(3500, 350, 'totem22');
 
-
     obstacles.create(4000, 500, 'totem21');
     obstacles.create(4000, 350, 'totem21');
 
-    armadillos = [];
-    armadillos.push(new armdll(3150, 320));
-    armadillos.push(new armdll(3650, 200));
+    obstacles.create(4500, 500, 'totem21');
+    obstacles.create(4500, 350, 'totem21');
+
+    obstacles.create(5000, 500, 'totem21');
+    obstacles.create(5000, 350, 'totem21');
+
+    obstacles.create(5700, 500, 'totem22');
+    obstacles.create(5700, 350, 'totem21');
 
     obstacles.scale.setTo(0.9);
 
@@ -88,13 +93,19 @@ var Mundo2 = {
     traps.create(1460, 570, 'puas-piso');
     traps.create(1790, 570, 'puas-piso');
     traps.create(1930, 570, 'puas-piso');
+    traps.create(4050, 570, 'puas-piso');
+    traps.create(4350, 570, 'puas-piso');
+    traps.create(4550, 570, 'puas-piso');
+    traps.create(4900, 570, 'puas-piso');
 
     traps.forEach(function(trap) {
         trap.body.immovable = true;
         trap.body.setSize(trap.width-50, trap.height, 10, 15);
     });
 
-    create_player(3000, 200);
+    monedas = game.add.group();
+    monedas.enableBody = true;
+    create_player(3000, 300);
 
     platforms2 = game.add.group();
     platforms2.enableBody = true;
@@ -108,12 +119,21 @@ var Mundo2 = {
     }
     platforms2.scale.setTo(0.64 , 0.64);
 
+    armadillos = [];
+    armadillos.push(new armdll(3150, 320, 20, 5));
+    armadillos.push(new armdll(3450, 320, 20, 5));
+    armadillos.push(new armdll(3550, 200, 30, 10));
+    armadillos.push(new armdll(4050, 200, 30, 10));
+    armadillos.push(new armdll(-1000, -1000, 20, 10));
+
     enemies = [];
     enemies.push(new birds(1500, game.height - 500, 120, 12));
     enemies.push(new birds(2300, game.height - 500, 120, 12));
+    enemies.push(new birds(5100, game.height - 500, 120, 12));
 
     instructions = game.add.group();
-    createInstruction(300 , 300, "Intenta no perder mucha vida", 30);
+    createInstruction(300 , 300, "Esta vez ... ", 30);
+    createInstruction(430 , 300, "intenta no perder mucha vida", 30);
     tween(instructions.children[0], 1500);
     game_menu_create(this);
   },
@@ -123,6 +143,10 @@ var Mundo2 = {
     var damaged = player.health;
     game.camera.follow(player);
     update_player();
+
+    setTimeout(function(){    
+      tween(instructions.children[1], 500);
+    },2000);
 
     for (var i = 0; i < enemies.length; i++){
       enemies[i].update();
@@ -134,9 +158,7 @@ var Mundo2 = {
 
     for (var i = 0; i < armadillos.length; i++){
       armadillos[i].update();
-      if(game.physics.arcade.overlap(armadillos[i].armadillo, player, hitEnemy, null, this)){
-        console.log("no son las pullas cachon");
-      }
+      game.physics.arcade.overlap(armadillos[i].armadillo, player, hitEnemy, null, this);
       if(armadillos[i].armadillo.died == false){
         enemyNumber++;
       }        
@@ -156,15 +178,16 @@ var Mundo2 = {
     player.movedX = player.body.x;
     game.physics.arcade.collide(monedas, platforms, null, null, this);
     game.physics.arcade.collide(monedas, obstacles, null, null, this);
+    game.physics.arcade.overlap(monedas, player, getMonedas, null, this);
   },
 
   render: function(){
       // platforms.forEachAlive(renderGroup, this);
       // obstacles.forEachAlive(renderGroup, this);
       // game.debug.body(player);
-      // for (var i = 0; i < enemies.length; i++){
-      //     game.debug.body(enemies[i].bird);
-      // }
+      for (var i = 0; i < armadillos.length; i++){
+          game.debug.body(armadillos[i].armadillo);
+      }
   },
 
   pause : function(){
