@@ -170,14 +170,16 @@ function deathHeigthAnimation(){
 }
 
 function changeHealthColor(damaged){
-    if(player.health >= 0){
-       healthText.text = player.health;
+    healthText.text = player.health;
+    if(player.health < 0){
+      player.health = 0;
     }
+
     if(player.health != damaged){
         healthText.tint = 0xff0000;
         setTimeout(function(){    
           healthText.tint = 0xffffff;
-        },200)  
+        },200) 
     }
 }
 

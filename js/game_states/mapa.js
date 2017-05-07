@@ -25,6 +25,8 @@ var Mapa = {
     jugar_buttons.onInputDown.add(frame, this, 0);
     jugar_buttons.onInputUp.add(play);
 
+    tweenTint(jugar_buttons, 0xFFFFFF, 0xffcccc, 1000)
+    
     nivel_tutorial = createItem(game.width/2-150, game.height/2-20, 'nivel_tutorial', 0.5, 0.75, true, true, 0.3);
 
     nivel_1 = createItem(game.width/2-50, game.height/2-20, 'nivel_1', 0.5, 0.7, true, true, 0.3);
@@ -45,7 +47,6 @@ var Mapa = {
       }
     }
 
-    tweenTint(jugar_buttons, 0xFFFFFF, 0xffcccc, 1000)
     selector = game.add.image(100, 100 , 'selector');
     selector.anchor.setTo(0.5,0.5);
     selector.visible = false;

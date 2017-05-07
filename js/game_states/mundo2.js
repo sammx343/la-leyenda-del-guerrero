@@ -1,3 +1,4 @@
+
 var Mundo2 = {
 
   preload : function(){
@@ -29,7 +30,7 @@ var Mundo2 = {
     platforms.enableBodyDebug = true;
     platforms.renderable = true;
     platforms.enableBody = true;
-    for(let i=0;i<=6;i++){
+    for(let i=0;i<=7;i++){
       var ground;
       if(i%2==0){
           ground = platforms.create(i*1280, 200, 'noche21');
@@ -73,6 +74,10 @@ var Mundo2 = {
 
     obstacles.create(5700, 500, 'totem22');
     obstacles.create(5700, 350, 'totem21');
+    
+    obstacles.add(tintTotem(7200, 200, 'totem22', 0xffaaaa, 0xff8888));
+    obstacles.add(tintTotem(7200, 350, 'totem22', 0xffaaaa, 0xff8888));
+    obstacles.add(tintTotem(7200, 500, 'totem22', 0xffaaaa, 0xff8888));
 
     obstacles.scale.setTo(0.9);
 
@@ -105,7 +110,7 @@ var Mundo2 = {
 
     monedas = game.add.group();
     monedas.enableBody = true;
-    create_player(3000, 300);
+    create_player(0, 300);
 
     platforms2 = game.add.group();
     platforms2.enableBody = true;
@@ -134,6 +139,9 @@ var Mundo2 = {
     instructions = game.add.group();
     createInstruction(300 , 300, "Esta vez ... ", 30);
     createInstruction(430 , 300, "intenta no perder mucha vida", 30);
+    createInstruction(1000 , 300, "Llega solo a el totem rojizo para completar el nivel", 30);
+    createInstruction(6000 , 300, "¿Intentando el camino rapido? \nDebes llegar al totem tu solo", 30);
+
     tween(instructions.children[0], 1500);
     game_menu_create(this);
   },
@@ -164,7 +172,7 @@ var Mundo2 = {
       }        
     }
 
-    if(enemyNumber<= 0 && showMenuOnce == false ){
+    if(player.win == true && showMenuOnce == false ){
         showWin();
     }
 
@@ -179,6 +187,22 @@ var Mundo2 = {
     game.physics.arcade.collide(monedas, platforms, null, null, this);
     game.physics.arcade.collide(monedas, obstacles, null, null, this);
     game.physics.arcade.overlap(monedas, player, getMonedas, null, this);
+
+    if(player.x >= 1000){
+      tween(instructions.children[2], 1500);
+    }
+
+    var alone = true;
+    enemies.forEach(function(bird) {
+        if((Math.abs(bird.bird.x - player.x)<= 1000) && player.x >= 6000){
+          alone = false 
+          tween(instructions.children[3], 1000);
+        }
+    });
+
+    if(player.x >= 6400 && alone == true){
+      player.win = true;
+    }
   },
 
   render: function(){
@@ -193,4 +217,13 @@ var Mundo2 = {
   pause : function(){
       pause();
   }
+}
+
+function tintTotem(x, y, key, color1, color2){
+  var totem = game.add.sprite(x, y, key);
+  tweenTint(totem, color1, color2, 1000);
+  return totem;
+}
+function stuff(){
+  console.log("coleeeeeeeeeeeeeeeeee");
 }

@@ -35,3 +35,15 @@ function move_parallax2(fondoSpeed, platformSpeed){
       (!game.camera.atLimit.x)? (item.x  += platformSpeed): item;
   });
 }
+
+function moveInstructions(){
+  instructions.forEach(function(item){
+    if(Right && player.movedX != player.body.x){
+      (!game.camera.atLimit.x)? (item.x += -player.speed/500) : item;
+    }else if(Left && player.movedX != player.body.x){
+      (!game.camera.atLimit.x)? (item.x += player.speed/500) : item;
+    }else{
+      (!game.camera.atLimit.x)? (item.x += 0) : item;
+    }
+  });
+}

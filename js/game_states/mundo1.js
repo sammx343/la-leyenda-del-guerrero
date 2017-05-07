@@ -182,6 +182,7 @@ var Mundo1 = {
         parallax1();
         changeHealthColor(damaged);   
 
+        moveInstructions();
         player.movedX = player.body.x;
     },
 

@@ -246,6 +246,7 @@ var Mundo0 = {
     changeHealthColor(damaged);   
     game.physics.arcade.collide(monedas, platforms, null, null, this);
     game.physics.arcade.collide(monedas, obstacles, null, null, this);
+    game.physics.arcade.overlap(monedas, player, getMonedas, null, this);
     player.movedX = player.body.x;
   },
 
@@ -268,16 +269,4 @@ function createInstruction(x, y, text, size){
     instruction = game.add.bitmapText(x, y, 'myfont', text, size);
     instruction.alpha = 0;
     instructions.add(instruction);
-}
-
-function moveInstructions(){
-  instructions.forEach(function(item){
-    if(Right && player.movedX != player.body.x){
-      (!game.camera.atLimit.x)? (item.x += -player.speed/500) : item;
-    }else if(Left && player.movedX != player.body.x){
-      (!game.camera.atLimit.x)? (item.x += player.speed/500) : item;
-    }else{
-      (!game.camera.atLimit.x)? (item.x += 0) : item;
-    }
-  });
 }
