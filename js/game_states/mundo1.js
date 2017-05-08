@@ -5,6 +5,7 @@ var Mundo1 = {
     },
 
     create: function(){
+        worldNow = 2;
         var tam = -100;
 
         // music.removeMarker("music1")
@@ -89,22 +90,6 @@ var Mundo1 = {
         monedas = game.add.group();
         monedas.enableBody = true;
 
-        for (var i = 0; i < 40; i++){
-            var moneda;
-            if(i%4==0){
-                moneda = monedas.create(i * 10, 0, 'oro_5');
-                moneda.scale.setTo(0.65);
-                moneda.body.acceleration.x = rnd(-100,100);
-            }else{
-                moneda = monedas.create(i * 10, 0, 'oro_1');
-                moneda.body.acceleration.x = rnd(-30,30);
-            }
-            //moneda.orientation = rnd(0,1)? (moneda.body.acceleration.x = rnd(-60,60) ) : (moneda.orientation = "left");
-          
-            moneda.body.gravity.y = gravity-300;
-            moneda.body.bounce.y = 0.8 + Math.random() * 0.2;
-        }
-
         birdsNumber = 5;
         enemies = [];
 
@@ -175,7 +160,7 @@ var Mundo1 = {
         }
 
         if(enemyNumber <= 0 || player.alive == false){
-            finalGoldText.text = player.gold;
+            //finalGoldText.text = player.gold;
         }
 
         key_pause(this);

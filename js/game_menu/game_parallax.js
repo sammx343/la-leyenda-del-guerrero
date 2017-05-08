@@ -10,9 +10,9 @@ function parallax1(){
 
 function parallax2(){
   if(Right && player.movedX != player.body.x){
-    move_parallax2(0.4, -player.speed/500);
+    move_parallax2(0.6, -player.speed/500);
   }else if(Left && player.movedX != player.body.x){
-    move_parallax2(-0.4, player.speed/500);
+    move_parallax2(-0.6, player.speed/500);
   }else{
     move_parallax2(0, 0); 
   }

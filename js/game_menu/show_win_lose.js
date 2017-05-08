@@ -2,9 +2,12 @@ function showWin(){
   showMenuOnce = true
   finalGoldText = game.add.bitmapText(game.width/2 + 160, game.height/2 - 20 , 'myfont', player.gold + "", 39);
   finalGoldText.visible = false;
-  game.global.level++;
+  if(game.global.level == worldNow){
+    game.global.level++;
+  }
   setTimeout(function(){
-     tween(menu_win, 1000);
+    console.log("esto lo tiene que hacer varias veces para que ocurra lo otro");
+     tween(menu_win);
      tween(head_win);
      tween(button_continue_win);
      tween(button_retry_win);
@@ -17,7 +20,7 @@ function showWin(){
      finalGoldText.anchor.setTo(0.5);
      finalGoldText.visible = true;
      finalGoldText.tint = 0x444444;
-  },500)
+  },2000)
 }
 
 function showLose(){

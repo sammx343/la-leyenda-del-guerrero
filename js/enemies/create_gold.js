@@ -16,22 +16,3 @@ function create_gold(enemy){
     moneda.body.bounce.y = 0.8 + Math.random() * 0.2;
   }
 }
-
-function getMonedas(player, moneda){
-    //goldText.text = player.gold;
-    // goldText.tint = 0xFFFF00;
-
-    if(player.died == false && player.win == false){
-      if(moneda.key == 'oro_5'){
-          player.exp += 5;
-      }else{
-          player.exp += 1;
-      }
-      console.log("eche que monda cole");
-      sabiduriaText.text = player.exp;
-      // setTimeout(function(){    
-      //   goldText.tint = 0xffffff;
-      // },300)
-      moneda.kill();
-    }
-}

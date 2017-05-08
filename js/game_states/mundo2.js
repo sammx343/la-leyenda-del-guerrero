@@ -6,6 +6,7 @@ var Mundo2 = {
   },
 
   create : function(){
+    worldNow = 3;
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.camera.flash('#000000', 500, true);
     game.world.setBounds(0, 0, 6600, 1000);
@@ -125,16 +126,19 @@ var Mundo2 = {
     platforms2.scale.setTo(0.64 , 0.64);
 
     armadillos = [];
-    armadillos.push(new armdll(3150, 320, 20, 5));
-    armadillos.push(new armdll(3450, 320, 20, 5));
-    armadillos.push(new armdll(3550, 200, 30, 10));
-    armadillos.push(new armdll(4050, 200, 30, 10));
+    armadillos.push(new armdll(3150, 320, 20, 8));
+    armadillos.push(new armdll(3450, 320, 20, 8));
+    armadillos.push(new armdll(3550, 200, 40, 14));
+    armadillos.push(new armdll(4050, 200, 40, 14));
     armadillos.push(new armdll(-1000, -1000, 20, 10));
 
     enemies = [];
     enemies.push(new birds(1500, game.height - 500, 120, 12));
     enemies.push(new birds(2300, game.height - 500, 120, 12));
-    enemies.push(new birds(5100, game.height - 500, 120, 12));
+    enemies.push(new birds(5100, game.height - 500, 250, 22));
+    enemies[enemies.length-1].bird.bala.fireRate = 2500;
+    enemies[enemies.length-1].bird.tint = 0x33CC33;
+    enemies[enemies.length-1].bird.minWidth = 300;
 
     instructions = game.add.group();
     createInstruction(300 , 300, "Esta vez ... ", 30);
@@ -152,9 +156,9 @@ var Mundo2 = {
     game.camera.follow(player);
     update_player();
 
-    setTimeout(function(){    
+    if(player.x>400){
       tween(instructions.children[1], 500);
-    },2000);
+    }
 
     for (var i = 0; i < enemies.length; i++){
       enemies[i].update();
@@ -194,8 +198,8 @@ var Mundo2 = {
 
     var alone = true;
     enemies.forEach(function(bird) {
-        if((Math.abs(bird.bird.x - player.x)<= 1000) && player.x >= 6000){
-          alone = false 
+        if((Math.abs(bird.bird.x - player.x)<= 1350 && bird.bird.died == false) && player.x >= 6000){
+          alone = false ;
           tween(instructions.children[3], 1000);
         }
     });
@@ -209,9 +213,9 @@ var Mundo2 = {
       // platforms.forEachAlive(renderGroup, this);
       // obstacles.forEachAlive(renderGroup, this);
       // game.debug.body(player);
-      for (var i = 0; i < armadillos.length; i++){
-          game.debug.body(armadillos[i].armadillo);
-      }
+      // for (var i = 0; i < armadillos.length; i++){
+      //     game.debug.body(armadillos[i].armadillo);
+      // }
   },
 
   pause : function(){

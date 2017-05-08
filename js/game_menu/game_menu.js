@@ -27,12 +27,16 @@ function game_menu_create(Mundo){
   // goldText.anchor.setTo(0.5);
   // goldText.fixedToCamera = true;
 
-  sabiduria = game.add.sprite(game.width/1.2, move*3 , 'sabiduria');
+  lvlText = game.add.bitmapText(game.width/1.23 - 20, move*2.9  , 'myfont', "Nivel " + player.level, 35);
+  lvlText.anchor.setTo(0.5);
+  lvlText.fixedToCamera = true;
+
+  sabiduria = game.add.sprite(game.width/1.2 - 20, move*5, 'sabiduria');
   sabiduria.anchor.setTo(0.5);
   sabiduria.scale.setTo(0.58);
   sabiduria.fixedToCamera = true;
 
-  sabiduriaText = game.add.bitmapText(game.width/1.08, move*3  , 'myfont', '0', 35);
+  sabiduriaText = game.add.bitmapText(game.width/1.08, move*5+3 , 'myfont', '0' + "/" + NE[player.level] , 35);
   sabiduriaText.anchor.setTo(0.5);
   sabiduriaText.fixedToCamera = true;
 

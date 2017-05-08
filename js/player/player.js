@@ -8,24 +8,33 @@ var jumpKey;
 var punch;
 var sparks;
 
+var Damage = 20;
+var Health = 100;
+var Speed = 200;
+var PlayerLevel = 1;
+var Exp = 0;
+var NE = [0, 50, 200, 280, 400];
+
 function create_player(x,y){
   player = game.add.sprite(x,y, 'dude');
   player.scale.setTo(0.75);
-  player.health = 100;
+  player.totalHealth = Health;
+  player.health = Health;
   player.alive = true;
   player.gold = 0;
-  player.speed = 200;
+  player.speed = Speed;
   player.died = false;
-  player.damage = 20;
+  player.damage = Damage;
   player.Side = "Right";
   player.win = false;
-  player.exp = 0;
+  player.exp = Exp;
   player.movedX = 0;
   player.punchable = true;
   player.backToDamage = 500;
   player.doubleJumping = false;
   player.jumpVelocity = -550; 
   player.doubleJumpVelocity = -500;
+  player.level = PlayerLevel;
   // player.anchor.setTo(0.5);
 
   cursors = game.input.keyboard.createCursorKeys();
@@ -62,6 +71,34 @@ function create_player(x,y){
 }
 
 function update_player(){
+  if(player.exp >= NE[player.level]){
+    var text;
+    text = game.add.bitmapText(player.x , player.y, 'myfont', "Nivel +1", 25);
+    game.add.tween(text).to( { alpha: 0 }, 4000, Phaser.Easing.Linear.None, true, 0, 0, false);
+    text.tint = 0xFFD700;
+    lvlText.tint = 0xFFD700;
+    setTimeout(function(){    
+      lvlText.tint = 0xffffff;
+    },3000);
+
+    player.level++;
+    lvlText.text = "Nivel " + player.level;
+    player.exp = 0;
+    player.damage = Math.floor(player.damage*1.3);
+    player.health = Math.floor(player.health*1.1);
+    player.totalHealth = Math.floor(player.totalHealth*1.1);
+    player.speed = Math.floor(player.speed*1.05);
+    sabiduriaText.text = " " + player.exp + "/" + NE[player.level];
+  }
+
+  if(player.win){
+    Damage = player.damage;
+    Health = player.totalHealth;
+    Speed = player.speed;
+    Exp = player.exp;
+    PlayerLevel = player.level;
+  }
+
   player_collisions();
   player.body.velocity.x = 0;
   if(player.health > 0 && player.win == false){
@@ -186,18 +223,23 @@ function changeHealthColor(damaged){
 function getMonedas(player, moneda){
     //goldText.text = player.gold;
     // goldText.tint = 0xFFFF00;
-
+    var text;
     if(player.died == false && player.win == false){
       if(moneda.key == 'oro_5'){
           player.exp += 5;
+          text = game.add.bitmapText(player.x , player.y, 'myfont', "+5", 20);
       }else{
           player.exp += 1;
+          text = game.add.bitmapText(player.x , player.y, 'myfont', "+1", 20);
       }
-      console.log("eche que monda cole");
-      sabiduriaText.text = player.exp;
+      sabiduriaText.text = player.exp + "/" + NE[player.level];
+      game.add.tween(text).to( { alpha: 0 }, 1000, Phaser.Easing.Linear.None, true, 0, 0, false);
+      text.tint = 0xFFD700;
+
       // setTimeout(function(){    
       //   goldText.tint = 0xffffff;
       // },300)
+
       moneda.kill();
     }
 }

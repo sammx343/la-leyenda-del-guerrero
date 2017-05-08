@@ -40,6 +40,7 @@ var scoreText;
 var healthText;
 var goldText;
 var finalGoldText;
+var lvlText;
 
 var gravity = 850;
 
@@ -64,10 +65,12 @@ var music2;
 var worldName;
 var instructions;
 var monedas;
+var worldNow;
 
 var Mundo0 = {
 
   create : function(){
+    worldNow = 1;
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.camera.flash('#000000', 500, true);
     create_world();
@@ -171,7 +174,7 @@ var Mundo0 = {
     createInstruction(3700 , 550, "Presiona C para golpear...", 30);
     createInstruction(3970 , 550, "No sera tan facil como crees", 30);
     createInstruction(4400 , 540, "Sigue hacia adelante, derrota al siguiente enemigo para ganar", 30);
-    createInstruction(5200 , 535, "Cada enemigo derrotado te da sabiduria. \nRecoge tanta como puedas, la vas a necesitar", 30);
+    createInstruction(5200 , 535, "Cada enemigo derrotado te da sabiduria. \nRecoge tanta como puedas para subir de nivel, \ntu progreso en el nivel solo permanecera si ganas", 30);
 
     tween(instructions.children[0], 3500);
     birdsNumber = 1;
@@ -213,14 +216,14 @@ var Mundo0 = {
       game.physics.arcade.overlap(enemies[i].bird, player, hitEnemy, null, this);
       if(enemies[i].bird.died == false){
           enemyNumber++;
-      }          
+      }         
     }
 
-    if(player.x >= 4200){
+    if(player.x >= 4100){
       tween(instructions.children[5], 1500);
     }
 
-    if(player.x >= 4800){
+    if(player.x >= 4600){
       tween(instructions.children[6], 1500);    
     }
 
