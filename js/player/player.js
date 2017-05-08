@@ -13,7 +13,7 @@ var Health = 100;
 var Speed = 200;
 var PlayerLevel = 1;
 var Exp = 0;
-var NE = [0, 50, 200, 280, 400];
+var NE = [0, 50, 200, 280, 400, 600];
 
 function create_player(x,y){
   player = game.add.sprite(x,y, 'dude');

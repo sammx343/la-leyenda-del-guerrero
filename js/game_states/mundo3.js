@@ -1,5 +1,4 @@
-
-var Mundo2 = {
+var Mundo3 = {
 
   preload : function(){
 
@@ -12,19 +11,19 @@ var Mundo2 = {
     game.world.setBounds(0, 0, 6600, 1000);
     //create_world();
 
-    fondoJuego = game.add.tileSprite(-200, -200, 1400, 1010, 'moon');
-    fondoJuego.scale.setTo(0.85 , 0.85);
-    fondoJuego.fixedToCamera = true;
-
     fondoLight = game.add.group();
     for(let i=0;i<=12;i++){
         var fondo1;
         if(i%2==0){
-            fondo1 = fondoLight.create(1280*i, -10, 'noche11');
+            fondo1 = fondoLight.create(1280*i, -10, 'tarde11');
         }else{
-            fondo1 = fondoLight.create(1280*i, 4, 'noche12');
+            fondo1 = fondoLight.create(1280*i, 4, 'tarde12');
         }
     }
+
+    fondoJuego = game.add.tileSprite(-200, -200, 1400, 1010, 'evening');
+    fondoJuego.scale.setTo(0.85 , 0.85);
+    fondoJuego.fixedToCamera = true;
     //fondoLight.scale.setTo(0.65 , 0.65);
 
     platforms = game.add.group();
@@ -33,11 +32,15 @@ var Mundo2 = {
     platforms.enableBody = true;
     for(let i=0;i<=7;i++){
       var ground;
-      if(i%2==0){
-          ground = platforms.create(i*1280, 200, 'noche21');
+      if(i%3==0){
+          ground = platforms.create(i*1280, 200, 'tarde23');
+          ground.body.setSize(ground.width, ground.height, 0, 472);
+      }
+      else if(i%2==0){
+          ground = platforms.create(i*1280, 200, 'tarde22');
           ground.body.setSize(ground.width, ground.height, 0, 472);
       }else{
-          ground = platforms.create(i*1280, 200 , 'noche22');
+          ground = platforms.create(i*1280, 200 , 'tarde21');
           ground.body.setSize(ground.width, ground.height, 0, 472);
       }
       ground.body.immovable = true;
@@ -50,35 +53,9 @@ var Mundo2 = {
     obstacles.enableBodyDebug = true;
     obstacles.renderable = true;
 
-    obstacles.create(650, 500, 'totem21');
-    obstacles.create(950, 500, 'totem22');
-    obstacles.create(1250, 500, 'totem21');
-    obstacles.create(1550, 500, 'totem21');
-    obstacles.create(1840, 500, 'totem22');
-    obstacles.create(2445, 500, 'totem21');
-
-    obstacles.create(3000, 500, 'totem21');
-    obstacles.create(3000, 350, 'totem21');
-
-
-    obstacles.create(3500, 500, 'totem22');
-    obstacles.create(3500, 350, 'totem22');
-
-    obstacles.create(4000, 500, 'totem21');
-    obstacles.create(4000, 350, 'totem21');
-
-    obstacles.create(4500, 500, 'totem21');
-    obstacles.create(4500, 350, 'totem21');
-
-    obstacles.create(5000, 500, 'totem21');
-    obstacles.create(5000, 350, 'totem21');
-
-    obstacles.create(5700, 500, 'totem22');
-    obstacles.create(5700, 350, 'totem21');
-    
-    obstacles.add(tintTotem(7200, 200, 'totem22', 0xffaaaa, 0xff8888));
-    obstacles.add(tintTotem(7200, 350, 'totem22', 0xffaaaa, 0xff8888));
-    obstacles.add(tintTotem(7200, 500, 'totem22', 0xffaaaa, 0xff8888));
+    obstacles.create(650, 500, 'totem31');
+    obstacles.create(950, 500, 'totem32');
+    obstacles.create(1250, 500, 'totem31');
 
     obstacles.scale.setTo(0.9);
 
@@ -94,15 +71,6 @@ var Mundo2 = {
     traps.renderable = true;
     
     traps.create(650, 570, 'puas-piso');
-    traps.create(930, 570, 'puas-piso');
-    traps.create(1190, 570, 'puas-piso');
-    traps.create(1460, 570, 'puas-piso');
-    traps.create(1790, 570, 'puas-piso');
-    traps.create(1930, 570, 'puas-piso');
-    traps.create(4050, 570, 'puas-piso');
-    traps.create(4350, 570, 'puas-piso');
-    traps.create(4550, 570, 'puas-piso');
-    traps.create(4900, 570, 'puas-piso');
 
     traps.forEach(function(trap) {
         trap.body.immovable = true;
@@ -118,33 +86,26 @@ var Mundo2 = {
     for(let i=0;i<=12;i++){
       var piso2;
       if(i%2==0){
-          piso2 = platforms2.create(i*1280, 200, 'noche31');
+          piso2 = platforms2.create(i*1280, 200, 'tarde11');
       }else{
-          piso2 = platforms2.create(i*1280, 200, 'noche32');
+          piso2 = platforms2.create(i*1280, 200, 'tarde12');
       }
     }
     platforms2.scale.setTo(0.64 , 0.64);
 
     armadillos = [];
     armadillos.push(new armdll(3150, 320, 20, 8));
-    armadillos.push(new armdll(3450, 320, 20, 8));
-    armadillos.push(new armdll(3550, 200, 40, 14));
-    armadillos.push(new armdll(4050, 200, 40, 14));
-    armadillos.push(new armdll(-1000, -1000, 20, 10));
 
     enemies = [];
-    enemies.push(new birds(1500, game.height - 500, 120, 12));
+
+    var newBird = new birds(2000, game.height - 500, 200, 18);
+    newBird.bird.tint = 0x222222;
+    enemies.push(newBird);
     enemies.push(new birds(2300, game.height - 500, 120, 12));
-    enemies.push(new birds(5100, game.height - 500, 250, 22));
-    enemies[enemies.length-1].bird.bala.fireRate = 2500;
-    enemies[enemies.length-1].bird.tint = 0x33CC33;
-    enemies[enemies.length-1].bird.minWidth = 300;
+
 
     instructions = game.add.group();
-    createInstruction(300 , 300, "Esta vez ... ", 30);
-    createInstruction(430 , 300, "intenta no perder mucha vida", 30);
-    createInstruction(1000 , 300, "Llega solo a el totem rojizo para completar el nivel", 30);
-    createInstruction(6000 , 300, "¿Intentando el camino rapido? \nDebes llegar al totem tu solo", 30);
+    createInstruction(300 , 300, "Si no te esforzaste antes ... Esto te sera dificil ", 30);
 
     tween(instructions.children[0], 1500);
     game_menu_create(this);
@@ -155,10 +116,6 @@ var Mundo2 = {
     var damaged = player.health;
     game.camera.follow(player);
     update_player();
-
-    if(player.x>400){
-      tween(instructions.children[1], 500);
-    }
 
     for (var i = 0; i < enemies.length; i++){
       enemies[i].update();
@@ -192,10 +149,6 @@ var Mundo2 = {
     game.physics.arcade.collide(monedas, obstacles, null, null, this);
     game.physics.arcade.overlap(monedas, player, getMonedas, null, this);
 
-    if(player.x >= 1000){
-      tween(instructions.children[2], 1500);
-    }
-
     var alone = true;
     enemies.forEach(function(bird) {
         if((Math.abs(bird.bird.x - player.x)<= 1350 && bird.bird.died == false) && player.x >= 6000){
@@ -203,10 +156,6 @@ var Mundo2 = {
           tween(instructions.children[3], 1000);
         }
     });
-
-    if(player.x >= 6400 && alone == true){
-      player.win = true;
-    }
   },
 
   render: function(){

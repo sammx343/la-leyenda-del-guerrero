@@ -36,7 +36,7 @@ function game_menu_create(Mundo){
   sabiduria.scale.setTo(0.58);
   sabiduria.fixedToCamera = true;
 
-  sabiduriaText = game.add.bitmapText(game.width/1.08, move*5+3 , 'myfont', '0' + "/" + NE[player.level] , 35);
+  sabiduriaText = game.add.bitmapText(game.width/1.08, move*5+3 , 'myfont', Exp + "/" + NE[player.level] , 35);
   sabiduriaText.anchor.setTo(0.5);
   sabiduriaText.fixedToCamera = true;
 

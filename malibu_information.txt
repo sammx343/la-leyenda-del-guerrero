@@ -1,0 +1,27 @@
+0 {
+  trans1
+  "En los caminos y lugares donde solían almacenar comida,-
+   agua y otras provisiones,se colocaban puyas en el-
+   suelo, untadas en veneno de muchos animales y yerbas,-
+   como sapos, serpientes y la leche de un árbol al que-
+   llaman Manzanillo"
+},
+
+1{
+  trans2
+  "Los Malibú vivían en constantes enfrentamientos con sus vecinos. El objetivo era
+   tomar posesión de cosas de las otras aldeas e incediar y matar a la población"
+}
+
+2{
+  trans3
+  "Los Malibú vivían en aldeas cerca al río Magdalena y algunas ciénagas, cercados
+   por palizadas a modo de murallas, cubiertas por ramas espinozas. Sus viviendas eran
+   semiesféricas cubiertas de paja y yerba enredada, con entradas bajas y estrechas"
+}
+
+"En los caminos y lugares donde solían almacenar comida,-agua y otras provisiones,se colocaban puyas en el-suelo, untadas en veneno de muchos animales y yerbas,-como sapos, serpientes y la leche de un árbol al que-llaman Manzanillo"
+
+"Los Malibú vivían en constantes enfrentamientos con- sus vecinos. El objetivo era tomar posesión de cosas- de las otras aldeas e incediar y matar a la población"
+
+"Los Malibú vivían en aldeas cerca al río Magdalena y- algunas ciénagas, cercados por palizadas a modo de - murallas, cubiertas por ramas espinozas. Sus - viviendas eran semiesféricas cubiertas de paja y - yerba enredada, con entradas bajas y estrechas"
