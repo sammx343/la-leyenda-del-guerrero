@@ -66,6 +66,8 @@ var Mundo1 = {
         obstacles.create(300, game.world.height - 190, 'totem1');
         obstacles.create(1100, game.world.height - 190, 'totem2');
         obstacles.create(2100, game.world.height - 190, 'totem2');
+        obstacles.create(3500, game.world.height - 190, 'puas1');
+        obstacles.create(4200, game.world.height - 190, 'puas2');
 
         obstacles.forEach(function(obstacle) {
             obstacle.body.immovable = true;
@@ -94,11 +96,13 @@ var Mundo1 = {
         enemies = [];
 
         for (var i = 0; i < birdsNumber; i++){
-          enemies.push(new birds(500*(i+1)+1500, game.height - 500, 120, 10));
+          enemies.push(new birds(600*(i+1)+1500, game.height - 500, 120, 10));
         }
 
         tigrillos = [];
-        tigrillos.push(new trgs(600, game.height - 200));
+        tigrillos.push(new trgs(600, game.height - 200, 100, 12, 220));
+        tigrillos.push(new trgs(3800, game.height - 200, 120, 15, 220));
+        tigrillos.push(new trgs(3800, game.height, 120, 15, 220));
 
         create_player(0,300);
 
@@ -142,10 +146,10 @@ var Mundo1 = {
         //console.log(game.camera.atLimit);
 
         update_enemies(enemies.length, tigrillos.length);
-
+        console.log(enemyNumber);
         update_player();
 
-        if(enemyNumber <= 0){
+        if(enemyNumber <= 1){
           setTimeout(function(){
             player.win  = true;
           },4000);

@@ -13,7 +13,7 @@ var Health = 100;
 var Speed = 200;
 var PlayerLevel = 1;
 var Exp = 0;
-var NE = [0, 50, 200, 280, 400, 600];
+var NE = [0, 50, 200, 280, 400, 600, 850];
 
 function create_player(x,y){
   player = game.add.sprite(x,y, 'dude');
@@ -30,7 +30,7 @@ function create_player(x,y){
   player.exp = Exp;
   player.movedX = 0;
   player.punchable = true;
-  player.backToDamage = 500;
+  player.backToDamage = 1300;
   player.doubleJumping = false;
   player.jumpVelocity = -550; 
   player.doubleJumpVelocity = -500;

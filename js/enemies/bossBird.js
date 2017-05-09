@@ -1,13 +1,8 @@
-
-var id = 0;
-var bala_effect;
-var explosions;
-
-birds = function(x,y, health, damage, minHeigth, maxHeigth, color){
+bossBird = function(x,y, health, damage, minHeigth, maxHeigth, color){
   this.name = "bird";
   bird = game.add.sprite(x, y, 'pajaro');
-  bird.tint = color || 0xFFFFFF;
-  bird.scale.setTo(0.65);
+  bird.tint = 0x111111;
+  bird.scale.setTo(1.1);
   bird.anchor.setTo(0.5);
   game.physics.arcade.enable(bird);
   bird.damage = damage || 5;
@@ -25,9 +20,11 @@ birds = function(x,y, health, damage, minHeigth, maxHeigth, color){
   bird.bala = game.add.weapon(30,'bala_pajaro'); 
   bird.bala.bulletKillType = Phaser.Weapon.KILL_CAMERA_BOUNDS;
   bird.backToDamage = 500;
-  bird.bala.bulletSpeed = 400;
+  bird.bala.bulletSpeed = 250;
   bird.bala.nextFire = 0;
-  bird.bala.fireRate = 3000;
+  bird.bala.fireRate = 500;
+  bird.fireStuff = 0;
+  bird.canFire = true;
   bird.bala.trackSprite(bird, -40, -10, true);
   bird.punchable = true;
   bird.exp = 30;
@@ -45,7 +42,7 @@ birds = function(x,y, health, damage, minHeigth, maxHeigth, color){
   this.bird = bird;
 }
 
-birds.prototype.update = function(){
+bossBird.prototype.update = function(){
   bird = this.bird;
 
   let frame;
@@ -53,6 +50,7 @@ birds.prototype.update = function(){
   if(bird.health <= 0 && bird.died == false){
     bird.died = true;
     bird.body.velocity.y = -300;
+    create_boss_gold(bird.body)
   }
 
   if(bird.died == false){
@@ -91,12 +89,11 @@ birds.prototype.update = function(){
         }
       }
     }
-
-    birdFire(bird);
+    
+    bossFire(bird);
     game.physics.arcade.overlap(bird.bala.bullets, player, hitPlayer, null, this);
     game.physics.arcade.collide(bird.bala.bullets, platforms, destroyBala, null, this);
     game.physics.arcade.overlap(platforms, bird,  birdTouchesGround, null, this);
-
   }else{
     let birdTween = game.add.tween(bird).to( { alpha: 0 }, 400, Phaser.Easing.Linear.None, true, 0, 0, false);
     bird.frame = frame;
@@ -105,26 +102,35 @@ birds.prototype.update = function(){
   }
 }
 
-function birdFire(bird){
-  if (game.time.now > bird.bala.nextFire && Math.abs(bird.x - player.x) <= 400){
+function bossFire(bird){
+  if (game.time.now > bird.bala.nextFire && Math.abs(bird.x - player.x) <= 500 && bird.canFire){
       bird.bala.nextFire = game.time.now + bird.bala.fireRate;
       bird.bala.fireAtXY(player.x+40, player.y+50)
+      bird.fireStuff++;
+      if(bird.fireStuff >= 6){
+        bird.canFire = false;
+        setTimeout(function(){ 
+          bird.fireStuff = 0;   
+          bird.canFire = true
+        },5000);
+      }
   }
 }
 
-function destroyBala(bala, piso){
-    bala.kill();
-}
-
-function hitPlayer(player, bala){
-  console.log(bird.damage);
-  player.health -= bird.damage;
-  var explosionAnimation = explosions.getFirstExists(false);
-  explosionAnimation.reset(bala.x, bala.y);
-  explosionAnimation.play('bala_effect', 25, false, true);
-  bala.kill();
-  damageText(player, bird.damage)
-}
-
-function birdTouchesGround(bird, platforms){
+function create_boss_gold(enemy){
+  console.log(enemy.x + "  "+ enemy.y);
+  for (var i = 0; i < 200; i++){
+    if(i%5==0){
+        moneda = monedas.create(enemy.x+enemy.width/2, enemy.y+enemy.height/2, 'oro_5');
+        moneda.scale.setTo(0.65);
+        moneda.body.acceleration.x = rnd(-130,130);
+    }else{
+        moneda = monedas.create(enemy.x, enemy.y, 'oro_1');
+        moneda.body.acceleration.x = rnd(-40,40);
+    }
+    //moneda.orientation = rnd(0,1)? (moneda.body.acceleration.x = rnd(-60,60) ) : (moneda.orientation = "left");
+    moneda.body.velocity.y = rnd(-100,-400);
+    moneda.body.gravity.y = gravity-300;
+    moneda.body.bounce.y = 0.8 + Math.random() * 0.2;
+  }
 }

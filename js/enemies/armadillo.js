@@ -1,7 +1,8 @@
-armdll = function(x,y, health, damage){
+armdll = function(x,y, health, damage, color){
   armadillo = game.add.sprite(x, y, 'armadillo');
   game.physics.arcade.enable(armadillo);
   armadillo.body.gravity.y = gravity;
+  armadillo.tint = color || 0xFFFFFF;
   armadillo.body.collideWorldBounds = true;
   armadillo.damage = damage;
   armadillo.id = id++;

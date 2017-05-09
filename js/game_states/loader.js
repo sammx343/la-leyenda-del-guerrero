@@ -98,8 +98,8 @@ function start(){
   game.load.image('oro', 'assets/la_leyenda/menu/oro.png');
   game.load.image('sabiduria', 'assets/la_leyenda/menu/sabiduria.png');
 
-  game.load.image('oro_5', 'assets/la_leyenda/objetos_mundos/oro/oro_pieza_grande.png');
-  game.load.image('oro_1', 'assets/la_leyenda/objetos_mundos/oro/oro_pieza_pequeña.png');
+  game.load.image('oro_5', 'assets/la_leyenda/objetos_mundos/oro/oro_5.png');
+  game.load.image('oro_1', 'assets/la_leyenda/objetos_mundos/oro/oro_1.png');
 
   game.load.image('pause_menu', 'assets/la_leyenda/menu/pause_menu/pausa-back.png');
   game.load.spritesheet('continue_button', 'assets/la_leyenda/menu/pause_menu/continue_button.png', 306, 131);
@@ -138,5 +138,5 @@ function fileComplete(progress, cacheKey, success, totalLoaded, totalFiles) {
 }
 
 function loadComplete(){
-  scene_transition('Mundo3', 50);
+  scene_transition('Splash', 50);
 }
