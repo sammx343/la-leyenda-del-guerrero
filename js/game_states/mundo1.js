@@ -96,12 +96,12 @@ var Mundo1 = {
         enemies = [];
 
         for (var i = 0; i < birdsNumber; i++){
-          enemies.push(new birds(600*(i+1)+1500, game.height - 500, 120, 10));
+          enemies.push(new birds(600*(i+1)+1500, game.height - 500, 80, 6));
         }
 
         tigrillos = [];
-        tigrillos.push(new trgs(600, game.height - 200, 100, 12, 220));
-        tigrillos.push(new trgs(3800, game.height - 200, 120, 15, 220));
+        tigrillos.push(new trgs(600, game.height - 300, 80, 8, 220));
+        tigrillos.push(new trgs(3800, game.height - 300, 80, 8, 220));
         tigrillos.push(new trgs(3800, game.height, 120, 15, 220));
 
         create_player(0,300);
@@ -119,6 +119,7 @@ var Mundo1 = {
             }
             piso2.fixedToCamera = true;
         }
+
 
         instructions = game.add.group();
         createInstruction(300 , 500, "Derrota a TODOS los enemigos para completar el nivel ", 30);
@@ -181,6 +182,9 @@ var Mundo1 = {
         // game.debug.body(player);
         // for (var i = 0; i < enemies.length; i++){
         //     game.debug.body(enemies[i].bird);
+        // }
+        // for (var i = 0; i < tigrillos.length; i++){
+        //   game.debug.body(tigrillos[i].tigrillo);
         // }
     },
 

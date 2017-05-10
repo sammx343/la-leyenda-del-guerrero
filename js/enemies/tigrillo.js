@@ -2,6 +2,7 @@
 trgs = function(x,y, health, damage, velocity, color){
   tigrillo = game.add.sprite(x, y, 'tigrillo1');
   tigrillo.scale.setTo(0.75);
+  tigrillo.anchor.setTo(0.5);
   game.physics.arcade.enable(tigrillo);
   tigrillo.body.gravity.y = gravity;
   tigrillo.tint = color || 0xFFFFFF;
@@ -17,10 +18,10 @@ trgs = function(x,y, health, damage, velocity, color){
   tigrillo.attack = false;
   tigrillo.animations.add('Left', [0,1,2,3],10,true);
   tigrillo.animations.add('Right', [4,5,6,7],10,true);
-  tigrillo.animations.add('AttackLeft', [0,1,2,2,2,2,2,2,2,2,2,2,2,2],10,true);
-  tigrillo.animations.add('AttackRight', [4,5,6,6,6,6,6,6,6,6,6,6,6,6],10,true);
+  tigrillo.animations.add('AttackLeft', [2],10,true);
+  tigrillo.animations.add('AttackRight', [6],10,true);
   tigrillo.side = "Left";
-  tigrillo.body.setSize(tigrillo.width-20, tigrillo.height-20, 10, 10);
+  tigrillo.body.setSize(tigrillo.width, tigrillo.height, 10, 10);
   this.tigrillo = tigrillo;
 }
 
@@ -35,7 +36,7 @@ trgs.prototype.update = function(){
     }, this);
   }else if(tigrillo.health > 0){
     if(tigrillo.side == "Right"){
-      if(player.x > tigrillo.x + 100 && inGround){
+      if(player.x > tigrillo.x - 50 && inGround){
         // console.log("gato 1");
         tigrillo.animations.play('AttackRight');
         tigrillo.body.velocity.x = tigrillo.velocity;

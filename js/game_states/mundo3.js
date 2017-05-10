@@ -82,20 +82,20 @@ var Mundo3 = {
     obstacles.create(650, 500, 'totem31');
     obstacles.create(950, 500, 'totem32');
     obstacles.create(1250, 500, 'totem31');
-    enemies.push(new birds(1000, game.height - 100, 250, 20, rnd(150,250), rnd(350,400), 0x222222));
-    enemies.push(new birds(1100, game.height - 100, 120, 12, rnd(150,250), rnd(270,320)));
-    enemies.push(new birds(2000, game.height - 100, 250, 20, rnd(150,250), rnd(350,400), 0x222222));
+    enemies.push(new birds(1000, game.height - 100, 140, 14, rnd(150,250), rnd(350,400), 0x222222));
+    enemies.push(new birds(1100, game.height - 100, 110, 11, rnd(150,250), rnd(270,320)));
+    enemies.push(new birds(2000, game.height - 100, 140, 14, rnd(150,250), rnd(350,400), 0x222222));
 
-    armadillos.push(new armdll(2150, 320, 30, 20));
-    armadillos.push(new armdll(2300, 320, 50, 20, 0x222222));
-    armadillos.push(new armdll(2410, 320, 50, 20, 0x222222));
-    armadillos.push(new armdll(2530, 320, 50, 20, 0x222222));
+    armadillos.push(new armdll(2150, 320, 30, 10));
+    armadillos.push(new armdll(2300, 320, 50, 12, 0x222222));
+    armadillos.push(new armdll(2410, 320, 50, 12, 0x222222));
+    armadillos.push(new armdll(2530, 320, 50, 12, 0x222222));
 
-    tigrillos.push(new trgs(2000, 400, 120, 15, 220, 0x222222));
+    tigrillos.push(new trgs(2000, 400, 120, 10, 220, 0x222222));
 
     obstacles.create(2900, 500, 'piedras3');
-    tigrillos.push(new trgs(2900, 400, 120, 13, 220));
-    tigrillos.push(new trgs(3300, 400, 120, 13, 220));
+    tigrillos.push(new trgs(2900, 400, 100, 10, 220));
+    tigrillos.push(new trgs(3300, 400, 100, 10, 220));
     obstacles.create(3900, 520, 'puas31');
     obstacles.create(3920, 370, 'totem31');
 
@@ -103,7 +103,7 @@ var Mundo3 = {
     obstacles.create(4400, 520, 'totem31');
     obstacles.create(4400, 380, 'totem31');
     obstacles.create(4400, 240, 'totem31');
-    armadillos.push(new armdll(3920, 100, 50, 17, 0x222222));
+    armadillos.push(new armdll(3920, 100, 50, 12, 0x222222));
 
     obstacles.create(5000, 520, 'totem31');
     obstacles.create(5000, 380, 'totem31');
@@ -123,9 +123,9 @@ var Mundo3 = {
     obstacles.create(6650, 380, 'totem31');
     obstacles.create(6650, 240, 'totem31');
 
-    enemies.push(new birds(5900, game.height - 100, 250, 24, rnd(150,250), rnd(350,400), 0x222222));
+    enemies.push(new birds(5900, game.height - 100, 150, 14, rnd(150,250), rnd(350,400), 0x222222));
 
-    var finalBird = new bossBird(7000, game.height - 100, 500, 30, rnd(150,250), rnd(350,400), 0x222222);
+    var finalBird = new bossBird(7000, game.height - 100, 500, 15, rnd(150,250), rnd(350,400), 0x222222);
     enemies.push(finalBird);
 
     obstacles.scale.setTo(0.9);
@@ -215,9 +215,9 @@ var Mundo3 = {
       // for (var i = 0; i < armadillos.length; i++){
       //     game.debug.body(armadillos[i].armadillo);
       // }
-      for (var i = 0; i < tigrillos.length; i++){
-          game.debug.body(tigrillos[i].tigrillo);
-      }
+      // for (var i = 0; i < tigrillos.length; i++){
+      //     game.debug.body(tigrillos[i].tigrillo);
+      // }
   },
 
   pause : function(){

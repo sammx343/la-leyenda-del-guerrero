@@ -126,16 +126,16 @@ var Mundo2 = {
     platforms2.scale.setTo(0.64 , 0.64);
 
     armadillos = [];
-    armadillos.push(new armdll(3150, 320, 20, 8));
-    armadillos.push(new armdll(3450, 320, 20, 8));
-    armadillos.push(new armdll(3550, 200, 40, 14));
-    armadillos.push(new armdll(4050, 200, 40, 14));
+    armadillos.push(new armdll(3150, 320, 20, 5));
+    armadillos.push(new armdll(3450, 320, 20, 5));
+    armadillos.push(new armdll(3550, 200, 40, 10));
+    armadillos.push(new armdll(4050, 200, 40, 10));
     armadillos.push(new armdll(-1000, -1000, 20, 10));
 
     enemies = [];
-    enemies.push(new birds(1500, game.height - 500, 120, 12));
-    enemies.push(new birds(2300, game.height - 500, 120, 12));
-    enemies.push(new birds(5100, game.height - 500, 250, 22));
+    enemies.push(new birds(1500, game.height - 500, 100, 8));
+    enemies.push(new birds(2300, game.height - 500, 100, 8));
+    enemies.push(new birds(5100, game.height - 500, 150, 10));
     enemies[enemies.length-1].bird.bala.fireRate = 2500;
     enemies[enemies.length-1].bird.tint = 0x33CC33;
     enemies[enemies.length-1].bird.minWidth = 300;
